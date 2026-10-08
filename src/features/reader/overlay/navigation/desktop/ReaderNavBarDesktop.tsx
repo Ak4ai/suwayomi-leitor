@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { ReaderTranslationControls } from '@/features/reader/translation/ReaderTranslationControls.tsx';
+
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import PushPinIcon from '@mui/icons-material/PushPin';
@@ -153,6 +155,7 @@ const BaseReaderNavBarDesktop = ({
                         />
                     </Stack>
                     <Divider />
+                    <ReaderTranslationControls />
                     <ReaderNavBarDesktopQuickSettings openSettings={openSettings} />
                 </Stack>
             </ReaderNavContainer>

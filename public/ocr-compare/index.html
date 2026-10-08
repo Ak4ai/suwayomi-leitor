@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Comparador OCR · IHC</title><link rel="stylesheet" href="/style.css"></head>
+<body><main>
+<header><span>SUWAYOMI · EXPERIMENTO IHC</span><h1>Comparar reconhecimento de HQs</h1><p>A mesma imagem, diferentes motores. Compare o inglês extraído antes de escolher como traduzi-lo.</p></header>
+<section class="setup">
+ <label for="image">1. Imagem PNG, JPEG ou WebP (até 15 MB)</label><input id="image" type="file" accept="image/png,image/jpeg,image/webp">
+ <p id="image-info">Selecione uma imagem, por exemplo imagensinputteste/7.jpg.</p>
+ <fieldset><legend>2. Métodos</legend><div id="methods">Carregando métodos…</div></fieldset>
+ <label><input type="checkbox" id="allow-cloud"> Permitir envio desta imagem aos serviços em nuvem selecionados (podem consumir cota).</label>
+ <details><summary>3. Transcrição correta para medir erros (opcional)</summary><label for="reference">Digite todo o texto esperado, na ordem desejada. Para uma avaliação focada só em falas, use a mesma política em todos os resultados.</label><textarea id="reference" rows="6" maxlength="20000" placeholder="Sem referência, mostramos resultados e tempo, sem nota de precisão."></textarea><p>CER e WER: distância de edição dividida pelo tamanho da referência. Menor é melhor; podem ultrapassar 100%. Ignoramos caixa, pontuação e espaços repetidos. A ordem importa. Não medem qualidade de tradução nem detecção de balões.</p></details>
+ <div class="actions"><button id="run" disabled>Comparar selecionados</button><button id="stop" disabled>Parar após método atual</button><button id="export" disabled>Exportar relatório JSON</button></div>
+ <p id="status" role="status" aria-live="polite">Aguardando imagem.</p><p id="error" role="alert" hidden></p>
+</section>
+<div class="workspace"><section class="preview"><h2>Regiões reconhecidas</h2><label for="overlay">Resultado para visualizar</label><select id="overlay"><option value="">Somente imagem</option></select><canvas id="canvas" aria-label="Imagem e regiões de texto numeradas"></canvas><p>Caixas são linhas, palavras ou blocos, conforme o método. Não equivalem necessariamente a balões. A ordem geométrica não garante a sequência narrativa.</p></section>
+<section class="results"><h2>Resultados</h2><p>Tempo total inclui inicialização quando necessária. Tesseract roda no navegador; os modelos ONNX rodam na CPU do servidor. Compare também execuções repetidas.</p><div class="table-wrap"><table><thead><tr><th>Método</th><th>Estado</th><th>Tempo total</th><th>CER</th><th>WER</th></tr></thead><tbody id="rows"></tbody></table></div><div id="outputs"></div></section></div>
+<section><h2>Resultados externos</h2><p>Lens/Circle to Search não tem integração oficial aqui. ML Kit requer Android/iOS. Você também pode importar a saída dos aplicativos completos Comic Translate, manga-image-translator ou de outro modelo. Isso é uma comparação manual, não execução desses aplicativos pelo laboratório.</p>
+<label for="external-method">Origem</label><select id="external-method"><option>Google Lens / Circle to Search</option><option>Google ML Kit Android/iOS</option><option>Comic Translate completo</option><option>manga-image-translator completo</option><option>Outro modelo / modelo próprio</option></select>
+<label for="external-version">Versão, dispositivo e observações</label><input id="external-version" maxlength="500" placeholder="Ex.: S23, versão do app, texto copiado sem correção">
+<label for="external-text">Transcrição em inglês da mesma imagem (não cole a tradução)</label><textarea id="external-text" rows="5" maxlength="20000"></textarea>
+<button id="import" disabled>Adicionar resultado externo</button></section>
+<footer>Os caminhos Comic Translate e CTD usam pesos pré-treinados dos projetos com processamento adaptado neste laboratório. Não reproduzem os pipelines completos nem executam tradução. As chaves dos serviços ficam somente no servidor.</footer>
+</main><script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js"></script><script type="module" src="/compare.js"></script></body></html>

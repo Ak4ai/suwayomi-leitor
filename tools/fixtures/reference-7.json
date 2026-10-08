@@ -1,0 +1,564 @@
+{
+  "image": "../../../imagensinputteste/7.jpg",
+  "imageSha256": "1c757ca951ae8a5a29cae82352c0551443bea207212eed2a1d1fc6d7ce2bdc9d",
+  "provenance": "Visually transcribed by the assistant from the original image on 2026-10-06. Not copied from OCR output. One page; no independent second annotator.",
+  "scope": "Existing horizontal line crops; excludes text not found by the detector. Duplicate caption is processed for timing but excluded from accuracy.",
+  "entries": [
+    {
+      "id": "s1-1",
+      "box": [
+        80,
+        76,
+        399,
+        129
+      ],
+      "expected": "WEDNESDAY",
+      "category": "caption",
+      "score": true
+    },
+    {
+      "id": "s1-2",
+      "box": [
+        72,
+        132,
+        343,
+        188
+      ],
+      "expected": "MORNING.",
+      "category": "caption",
+      "score": true
+    },
+    {
+      "id": "s1-3",
+      "box": [
+        132,
+        223,
+        480,
+        281
+      ],
+      "expected": "METROPOLIS.",
+      "category": "caption",
+      "score": true,
+      "note": "Leading/trailing punctuation may be clipped by the existing detector crop; shared limitation of all models."
+    },
+    {
+      "id": "s2-1",
+      "box": [
+        676,
+        102,
+        858,
+        128
+      ],
+      "expected": "YOU MOSTLY",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s2-2",
+      "box": [
+        668,
+        131,
+        867,
+        157
+      ],
+      "expected": "WAIT FOR THE",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s2-3",
+      "box": [
+        710,
+        160,
+        826,
+        187
+      ],
+      "expected": "TRADE?",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s3-1",
+      "box": [
+        886,
+        183,
+        1083,
+        212
+      ],
+      "expected": "NO, NO, I BUY",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s3-2",
+      "box": [
+        839,
+        213,
+        1130,
+        239
+      ],
+      "expected": "SINGLE ISSUES, TOO.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s3-3",
+      "box": [
+        876,
+        243,
+        1093,
+        268
+      ],
+      "expected": "IT DEPENDS ON",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s3-4",
+      "box": [
+        909,
+        272,
+        1060,
+        297
+      ],
+      "expected": "THE BOOK.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s4-1",
+      "box": [
+        137,
+        224,
+        480,
+        279
+      ],
+      "expected": "METROPOLIS.",
+      "category": "caption",
+      "score": false,
+      "note": "Duplicate detection of caption s1-3; excluded from accuracy scores."
+    },
+    {
+      "id": "s5-1",
+      "box": [
+        946,
+        314,
+        1060,
+        339
+      ],
+      "expected": "THANKS",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s5-2",
+      "box": [
+        867,
+        343,
+        1138,
+        369
+      ],
+      "expected": "FOR THE AWESOME",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s5-3",
+      "box": [
+        829,
+        371,
+        1177,
+        398
+      ],
+      "expected": "RECOMMENDATIONS. I'M",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s5-4",
+      "box": [
+        879,
+        402,
+        1127,
+        427
+      ],
+      "expected": "EXCITED TO READ",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s5-5",
+      "box": [
+        958,
+        430,
+        1049,
+        457
+      ],
+      "expected": "THEM.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s6-1",
+      "box": [
+        1459,
+        334,
+        1662,
+        361
+      ],
+      "expected": "SAME TO YOU.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s6-2",
+      "box": [
+        1426,
+        363,
+        1694,
+        390
+      ],
+      "expected": "I HAD NEVER SEEN",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s6-3",
+      "box": [
+        1385,
+        393,
+        1737,
+        418
+      ],
+      "expected": "SOME OF THOSE COMICS",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s6-4",
+      "box": [
+        1416,
+        421,
+        1707,
+        448
+      ],
+      "expected": "BEFORE. I'LL CHECK",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s6-5",
+      "box": [
+        1486,
+        452,
+        1637,
+        477
+      ],
+      "expected": "THEM OUT.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s7-1",
+      "box": [
+        1534,
+        539,
+        1728,
+        566
+      ],
+      "expected": "IT'S GOOD TO",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s7-2",
+      "box": [
+        1508,
+        568,
+        1756,
+        596
+      ],
+      "expected": "NOT READ JUST",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s7-3",
+      "box": [
+        1548,
+        600,
+        1714,
+        624
+      ],
+      "expected": "SUPERHERO",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s7-4",
+      "box": [
+        1579,
+        628,
+        1685,
+        654
+      ],
+      "expected": "BOOKS.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s8-1",
+      "box": [
+        1372,
+        688,
+        1505,
+        714
+      ],
+      "expected": "OH YEAH.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s8-2",
+      "box": [
+        1330,
+        717,
+        1546,
+        745
+      ],
+      "expected": "TOTALLY. YEAH,",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s8-3",
+      "box": [
+        1364,
+        746,
+        1513,
+        773
+      ],
+      "expected": "I READ...A",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s8-4",
+      "box": [
+        1404,
+        775,
+        1470,
+        802
+      ],
+      "expected": "LOT.",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s9-1",
+      "box": [
+        383,
+        1635,
+        520,
+        1662
+      ],
+      "expected": "Y'KNOW...",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s10-1",
+      "box": [
+        421,
+        1683,
+        525,
+        1709
+      ],
+      "expected": "...IF YOU",
+      "category": "dialogue",
+      "score": true,
+      "note": "Leading/trailing punctuation may be clipped by the existing detector crop; shared limitation of all models."
+    },
+    {
+      "id": "s10-2",
+      "box": [
+        317,
+        1712,
+        618,
+        1738
+      ],
+      "expected": "EVER WANTED MORE",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s10-3",
+      "box": [
+        312,
+        1742,
+        618,
+        1769
+      ],
+      "expected": "RECOMMENDATIONS...",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s11-1",
+      "box": [
+        409,
+        1803,
+        571,
+        1828
+      ],
+      "expected": "...YOU COULD",
+      "category": "dialogue",
+      "score": true,
+      "note": "Leading/trailing punctuation may be clipped by the existing detector crop; shared limitation of all models."
+    },
+    {
+      "id": "s11-2",
+      "box": [
+        357,
+        1832,
+        602,
+        1857
+      ],
+      "expected": "HANG OUT AT MY",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s11-3",
+      "box": [
+        332,
+        1860,
+        627,
+        1887
+      ],
+      "expected": "PLACE AND BORROW",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s11-4",
+      "box": [
+        369,
+        1891,
+        588,
+        1916
+      ],
+      "expected": "SOME COMICS?",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s12-1",
+      "box": [
+        751,
+        2381,
+        922,
+        2405
+      ],
+      "expected": "WHY WOULD",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s12-2",
+      "box": [
+        743,
+        2410,
+        933,
+        2435
+      ],
+      "expected": "I NEED TO DO",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s12-3",
+      "box": [
+        784,
+        2436,
+        893,
+        2466
+      ],
+      "expected": "THAT?",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s13-1",
+      "box": [
+        1349,
+        2397,
+        1498,
+        2424
+      ],
+      "expected": "I GOT ALL",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s13-2",
+      "box": [
+        1338,
+        2427,
+        1514,
+        2452
+      ],
+      "expected": "THE COMICS",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s13-3",
+      "box": [
+        1331,
+        2457,
+        1520,
+        2481
+      ],
+      "expected": "I NEED RIGHT",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s13-4",
+      "box": [
+        1380,
+        2484,
+        1470,
+        2512
+      ],
+      "expected": "HERE!",
+      "category": "dialogue",
+      "score": true
+    },
+    {
+      "id": "s14-1",
+      "box": [
+        314,
+        2490,
+        375,
+        2544
+      ],
+      "expected": "NEW",
+      "category": "decorative",
+      "score": true
+    },
+    {
+      "id": "s15-1",
+      "box": [
+        1737,
+        2820,
+        1797,
+        2850
+      ],
+      "expected": "CK?",
+      "category": "dialogue",
+      "score": true
+    }
+  ]
+}

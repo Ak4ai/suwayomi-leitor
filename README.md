@@ -1,86 +1,84 @@
-# Suwayomi-WebUI
+# Suwayomi Leitor: tradução de quadrinhos
 
-This is the repository of the default client of [Suwayomi-Server](https://github.com/Suwayomi/Suwayomi-Server).
+Protótipo da disciplina de Interação Humano-Computador (IHC), desenvolvido como fork do [Suwayomi-WebUI](https://github.com/Suwayomi/Suwayomi-WebUI). Reconhece texto em inglês e desenha a tradução em português sobre as páginas do leitor.
 
-The server has this web app bundled by default and is able to automatically update to the latest versions.
-Thus, there is no need to manually download any builds unless you want to host the app yourself instead of having it hosted by the Suwayomi-Server.
+O projeto busca facilitar o acesso de quem não conhece o idioma original, incluindo pessoas que precisam de apoio para leitura. A implementação atual cobre OCR, tradução e redesenho; narração e outros recursos de acessibilidade fazem parte da proposta e ainda precisam ser desenvolvidos.
 
-## Features
+## Recursos implementados
 
-- Library management
-    - Library page - manga management
-        - Filter/Sort/Search your manga
-        - Use categories to categorize your manga
-        - Select manga in your library and perform actions (e.g. download, change categories, mark as read, ...) on one or multiple manga
-    - Manga page - chapter management
-        - Filter/Sort the chapter list
-        - Select chapters and perform actions (e.g. download, bookmark, mark as read, ...) on one or multiple manga
-    - Select a range of manga/chapters by using shift + left click or long press
-    - Overview of duplicated manga in your library (settings > library)
-- Reader
-    - Desktop and Mobile UI
-    - Default settings per reading mode
-    - Settings per manga
-    - Reading modes (Single/Double Page, Continuous Vertical/Horizontal, Webtoon)
-    - Page scale modes (limit by width/height/screen, scale small pages, custom reader width)
-    - Image filters
-    - Customizable keybinds
-    - Auto scrolling
-    - Infinite chapter scrolling
-    - Option to ignore duplicated chapters while reading
-    - Option to automatically download next chapters while reading
-    - Option to automatically delete downloaded chapters after reading them
-    - ...
-- Download queue
-- Reading history (**rudimentary**)
-- Settings per device (e.g. different reader settings for pc, phone and tablet)
-- Sources
-    - Migration of manga between sources
-    - Hide in library manga while browsing sources
-    - Save source searches to easily reuse them
-    - Duplication check when adding a new manga to your library
-    - Quick add/remove a manga to your library in the source browse (hover with mouse on pc or long press on touch devices)
-- App updates
-    - Inform about available WebUI and Server updates
-    - Inform about successful WebUI and Server updates since the last time the app was used
-- Themes
-    - Use predefined themes
-    - Create your own themes
-    - Dynamic theme on manga pages
+- Tradução automática no menu do leitor nativo e informações no painel lateral direito.
+- OCR local com detector de texto/balões e PaddleOCR; opções WASM e WebGPU com fallback.
+- Gemini com chave do usuário, Google experimental sem chave, MyMemory e OPUS-MT local experimental.
+- OPUS-MT compacto (~122 MB) ou maior (~519 MB), com normalização de maiúsculas opcional.
+- Limpeza leve, LaMa e modo híbrido: leve para fundos uniformes, IA para os difíceis, com agrupamento de recortes.
+- Renderização Canvas ou SVG, encaixe das falas, fontes locais e ampliação automática quando necessária.
+- Processamento antecipado do capítulo inteiro, uma página por vez, priorizando a leitura atual; cache no IndexedDB.
 
-## Preview
+## Executar no Windows
 
-An ongoing changelog of all relevant changes since the last stable release can be found [here](https://github.com/Suwayomi/Suwayomi-WebUI/blob/master/CHANGELOG.md)
+Requisitos: Git, Node.js com Corepack/pnpm, Python e Java 21 para o servidor local. O desenvolvimento atual usa PowerShell.
 
-To use the preview version you can select the PREVIEW channel in the settings of your Suwayomi-Server.
-The server is then able to download and also keep the version automatically up-to-date.
+```powershell
+git clone https://github.com/Ak4ai/suwayomi-leitor.git
+cd suwayomi-leitor
+corepack pnpm install --frozen-lockfile
+Copy-Item .env.template .env
+```
 
-Keep in mind that the preview version might need a newer version than the stable server.
-In case your server is outdated, it will automatically downgrade to the latest compatible WebUI version.
+No `.env`, configure `PORT = 5173` e `VITE_SERVER_URL_DEFAULT = http://127.0.0.1:4567`.
 
-Minified builds of WebUI can be found here [Suwayomi-WebUI-preview](https://github.com/Suwayomi/Suwayomi-WebUI-preview).
+### Servidor local
 
-Additionally, there is an online build of the WebUI preview version that is available [here](https://suwayomi-webui-preview.github.io/).
-_Make sure to set your Suwayomi-Server hostname in Settings or you'll get infinite loading._ Also note that its the **latest** revision of WebUI and might not work correctly if you connect to a stable build of Suwayomi-Server.
+```powershell
+npm run suwayomi:setup
+npm run suwayomi:start
+```
 
-## Contributing and Technical info
+A instalação e a biblioteca ficam em `.local-server/`, ignorada pelo Git. Os scripts de instalação estão versionados; o servidor, banco, downloads e extensões não estão. Veja [SUWAYOMI-LOCAL.md](SUWAYOMI-LOCAL.md).
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+### Preparar OCR
 
-## Translation
+```powershell
+python -m venv .venv-ocr
+.venv-ocr/Scripts/python.exe -m pip install -r tools/ocr_compare/requirements.txt
+.venv-ocr/Scripts/python.exe tools/ocr_compare/prepare.py
+npm ci --prefix tools/ocr-web-runtime
+npm run reader:dev
+```
 
-Feel free to translate the project on [Weblate](https://hosted.weblate.org/projects/suwayomi/suwayomi-webui/)
+Abra **http://127.0.0.1:5173**, adicione uma obra à biblioteca, abra o capítulo e ative **Traduzir automaticamente** no menu do leitor. O manifesto OCR já está versionado; não é necessário regenerá-lo para executar o leitor.
 
-<details><summary>Translation Progress</summary>
-<a href="https://hosted.weblate.org/engage/suwayomi-webui/">
-<img src="https://hosted.weblate.org/widgets/suwayomi/-/suwayomi-webui/multi-auto.svg" alt="Translation status" />
-</a>
-</details>
+### Recursos opcionais
 
-## License
+```powershell
+# Limpeza com IA (~62 MB)
+npm run inpaint:setup
+# Tradutor local compacto e runtime
+npm run translation:setup
+# Tradutor local maior
+npm run translation:setup:big
+```
 
-    Copyright (C) Contributors to the Suwayomi project
+Escolha o tradutor, o método de limpeza e o renderizador em **Configurar tradução**. Os modelos são baixados separadamente; não estão no repositório. O protótipo separado pode ser aberto com `npm run ocr:web`, em **http://127.0.0.1:3003/chapter.html**.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+## Estado e limitações
+
+Este é um protótipo em desenvolvimento. OCR pode perder falas e a limpeza depende da qualidade da máscara; alguns textos ficam apenas no painel. OPUS-MT pode errar contexto e nomes, mesmo com normalização. Serviços externos estão sujeitos a quotas e indisponibilidade; Google sem chave utiliza endpoint experimental. Erros pausam a fila e permitem tentativa manual. Modelos locais exigem memória, armazenamento e download inicial.
+
+OCR e inferência são executados no navegador. Google/MyMemory utilizam um relay local quando disponível; Gemini depende da API externa. OPUS-MT funciona localmente depois que os arquivos do modelo estiverem disponíveis. O acesso remoto ao OCR requer HTTPS; localhost é adequado no PC.
+
+As avaliações documentadas foram feitas principalmente no PC. A integração mais recente do OPUS e da fila completa ainda precisa de teste de execução. Não há garantia de desempenho no S23 ou em todos os navegadores.
+
+## Documentação
+
+- [Plano do projeto](docs/ihc/plan.md) e [proposta em LaTeX](docs/ihc/main.tex).
+- [Integração no leitor](NATIVE-READER-TRANSLATION.md).
+- [OCR no navegador](OCR-WEB.md) e [comparação de OCR](OCR-COMPARISON.md).
+- [Limpeza com IA e modo híbrido](AI-INPAINT.md), [renderização SVG](SVG-READER.md) e [OPUS-MT](OPUS-MT-TEST.md).
+- [README original do Suwayomi](README-UPSTREAM.md).
+
+Os relatórios descrevem experiências em momentos diferentes do desenvolvimento. Imagens de HQs, resultados locais e bibliotecas utilizadas nos testes não acompanham o repositório; ferramentas de diagnóstico podem exigir esses arquivos locais.
+
+## Origem, licenças e créditos
+
+Fork acadêmico independente do Suwayomi-WebUI; preserva a [licença do projeto original](LICENSE). Detector do ecossistema Comic Translate, reconhecimento PaddleOCR/RapidOCR, ONNX Runtime e Transformers.js; os manifestos dos modelos registram suas origens. Modelos possuem licenças próprias: consulte os manifestos e relatórios antes de redistribuir pesos. O modelo OPUS maior é de Helsinki-NLP, exportado por Douglasrambo, sob CC BY 4.0. As fontes Comic Neue e Bangers incluem os textos de licença OFL em `public/ocr-web/`.

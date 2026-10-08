@@ -1,4 +1,15 @@
 node_modules/
+.venv-ocr/
+.ocr-models/
+.local-server/
+ocr-runs/
+ocr-web-dist/
+public/ocr-web/vendor/
+public/ocr-web/models/
+public/ocr-web/translation-models/
+public/ocr-web/translation-vendor/
+__pycache__/
+.env.ocr
 .eslintcache
 .vscode
 .env
@@ -9,3 +20,26 @@ dev-dist/*
 
 src/lib/graphql/schema.json
 .oxlintrc.jsonc
+
+# Local servers, libraries and downloaded artifacts
+.local-server/
+.local-server-*/
+*.jar
+*.mv.db
+*.trace.db
+*.pid
+*.log
+.env.*
+!.env.template
+!.env.ocr.example
+.venv*/
+*.download
+*.onnx
+*.pt
+*.pth
+*.safetensors
+# LaTeX build artifacts
+docs/ihc/*.aux
+docs/ihc/*.fdb_latexmk
+docs/ihc/*.fls
+docs/ihc/*.synctex.gz

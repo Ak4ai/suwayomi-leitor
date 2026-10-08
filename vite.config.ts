@@ -7,6 +7,7 @@
  */
 
 import path from 'path';
+import {handleTranslationRelay} from './tools/translation-relay.mjs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import legacy from '@vitejs/plugin-legacy';
@@ -47,6 +48,10 @@ export default defineConfig(({ command }) => ({
     },
     server: {
         port: Number(process.env.PORT),
+        headers: {
+            'Cross-Origin-Opener-Policy': 'same-origin',
+            'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
         allowedHosts: process.env.ALLOWED_HOSTS?.split(',').map((s) => s.trim()),
     },
     resolve: {
@@ -59,6 +64,14 @@ export default defineConfig(({ command }) => ({
         include: ['@mui/material/Tooltip'],
     },
     plugins: [
+        {
+            name:'ihc-translation-relay',
+            configureServer(server){
+                server.middlewares.use((request,response,next)=>{
+                    void handleTranslationRelay(request,response).then(handled=>{if(!handled)next();}).catch(()=>{if(!response.headersSent)response.writeHead(500,{'Content-Type':'application/json'}).end(JSON.stringify({error:'Falha no encaminhamento local.'}));});
+                });
+            },
+        },
         react({
             plugins: [['@lingui/swc-plugin', {}]],
         }),

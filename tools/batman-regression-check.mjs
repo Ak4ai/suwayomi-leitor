@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {associateBubble,removeTinyLines} from '../public/ocr-web/vision.js';
+import {imageQuality} from '../public/ocr-web/image-quality.js';
+import {selectSegments} from '../public/ocr-web/ocr-quality.js';
+const textBox=[454,1537,665,1582],bubble={box:[439,1543,664,1608],score:.79};
+assert.deepEqual(associateBubble(textBox,[bubble])?.box,bubble.box);
+assert.equal(associateBubble([1000,1000,1200,1100],[bubble]),undefined);
+assert.equal(removeTinyLines([{box:[1068,2220,1071,2223]},{box:[795,2200,1154,2238]}]).length,1);
+assert.equal(imageQuality(280,431).small,true);assert.equal(imageQuality(1988,3057).small,false);
+const segment={id:'s4',box:textBox,bubble:null,textKind:'bubble-text',sourceText:'NO WEAKNESS.',lines:[{box:textBox,text:'NO WEAKNESS.',confidence:.995}],translation:''};
+assert.equal(selectSegments([segment],'balloons').segments.length,1);
+console.log(JSON.stringify({passed:true,edgeAssociation:true,tinyArtifactRemoved:true,thumbnailDetected:true,speechWithoutOutlinePreserved:true}));

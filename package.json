@@ -4,6 +4,16 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "suwayomi:setup": "python tools/setup-suwayomi-local.py",
+        "suwayomi:start": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/suwayomi-local.ps1 start",
+        "suwayomi:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/suwayomi-local.ps1 stop",
+        "suwayomi:restart": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/suwayomi-local.ps1 restart",
+        "suwayomi:status": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/suwayomi-local.ps1 status",
+        "suwayomi:seed": "python tools/seed-suwayomi-local.py",
+        "ocr:dev": "node tools/ocr-server.mjs",
+        "ocr:compare": "node tools/ocr-compare.mjs",
+        "ocr:web": "node tools/ocr-web-server.mjs",
+        "ocr:web:export": "node tools/ocr-web-server.mjs --export",
         "setup-env-files": "tsx tools/scripts/setupEnvFiles.ts",
         "setup": "pnpm i --frozen-lockfile && pnpm setup-env-files",
         "dev": "pnpm setup && vite",
@@ -30,7 +40,12 @@
         "manga:gen-type-tags": "tsx tools/scripts/manga/generateMangaTypeTags.ts",
         "tsc": "tsgo",
         "tsc:legacy": "tsc",
-        "prepare": "husky"
+        "prepare": "husky",
+        "reader:prepare": "node tools/prepare-reader-assets.mjs",
+        "reader:dev": "node tools/prepare-reader-assets.mjs && vite --host 127.0.0.1 --port 5173",
+        "inpaint:setup": "python tools/setup-inpaint-model.py",
+        "translation:setup": "npm --prefix tools/translation-runtime install --ignore-scripts --no-audit --no-fund && node tools/prepare-opus-runtime.mjs && python tools/setup-opus-model.py",
+        "translation:setup:big": "python tools/setup-opus-model.py --big"
     },
     "dependencies": {
         "@apollo/client": "4.2.12",

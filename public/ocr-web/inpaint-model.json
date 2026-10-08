@@ -1,0 +1,13 @@
+{
+  "id": "lama-512-int8-v1",
+  "name": "LaMa 512 INT8",
+  "bytes": 62074990,
+  "sha256": "cab19978adc306622fe37ef60d4a52103b99c98141d499c2a2366a7ed1255dbe",
+  "url": "./models/lama-512-int8.onnx",
+  "remoteUrl": "https://huggingface.co/g-ronimo/lama/resolve/418036c6b541e526cdbb0bead1ec3a87dabede53/lama_512_int8.onnx",
+  "source": "https://huggingface.co/g-ronimo/lama",
+  "license": "Apache-2.0",
+  "size": 512,
+  "input": "input",
+  "output": "output"
+}

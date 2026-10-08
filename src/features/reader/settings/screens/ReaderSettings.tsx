@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { ReaderTranslationControls } from '@/features/reader/translation/ReaderTranslationControls.tsx';
+
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
@@ -41,6 +43,7 @@ export const ReaderSettings = ({ isOpen, close }: { isOpen: boolean; close: () =
             })}
         >
             <DialogContent sx={{ p: 0 }}>
+                <ReaderTranslationControls />
                 <ReaderSettingsTabs
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}

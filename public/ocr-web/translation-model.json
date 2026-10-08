@@ -1,0 +1,63 @@
+{
+  "id": "Xenova/opus-mt-en-ROMANCE",
+  "revision": "9d2ba69ac80c8e8453c3d9a1e2323a0e7b8ca3cd",
+  "target": "pt_BR",
+  "prefix": ">>pt_BR<<",
+  "dtype": "q8",
+  "runtimeVersion": "3.8.1",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 1508,
+      "sha256": "dc4f6f9ffbbf1196ff9e8329e5666fe190aef1b1c6806649d86b962b9bde292c"
+    },
+    {
+      "name": "generation_config.json",
+      "bytes": 293,
+      "sha256": "b743baabb7da4c1a2f19fe558bd6b4c0c7c3b0762fcb5ca7a48fe5a2c2219803"
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 6117691,
+      "sha256": "31cabbd7e3857f21bcde266b0e84585ef3282133acce42d3765e8f31cb5f4040"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "bytes": 503,
+      "sha256": "666d091bdf094d476aac60b645efd7d18cac468510f5c71b327b7ae937126e05"
+    },
+    {
+      "name": "special_tokens_map.json",
+      "bytes": 74,
+      "sha256": "5e4d1f5e759d74cb1c2fe1d165cfc62b5237aa904de759380cd6f43042eec723"
+    },
+    {
+      "name": "vocab.json",
+      "bytes": 1587364,
+      "sha256": "d9c3b6b01d3a9c9403befa60fd17e4a50dc4929698e3d6b9c2e7f066a9d1f041"
+    },
+    {
+      "name": "source.spm",
+      "bytes": 779155,
+      "sha256": "b1f89e7b05828846baf19109a61029a36838f1c4f3defc218e6aee0ee2787864"
+    },
+    {
+      "name": "target.spm",
+      "bytes": 799001,
+      "sha256": "5e54632fe5ce5ef4108a827daccc121b7cd4ea589fbb4bd856b8dd06086166b2"
+    },
+    {
+      "name": "onnx/encoder_model_quantized.onnx",
+      "bytes": 52899742,
+      "sha256": "b4ddfd9338ba3d7c6b9c2d1410ed94fb7e06741226918cef6148031101bbd019"
+    },
+    {
+      "name": "onnx/decoder_model_merged_quantized.onnx",
+      "bytes": 60212804,
+      "sha256": "b5f6d442da7fa69f9d500df90373d2fdca4f799c43696b41888353b5c3c8eb13"
+    }
+  ],
+  "bytes": 122398135,
+  "license": "Apache-2.0",
+  "source": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ROMANCE"
+}

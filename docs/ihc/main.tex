@@ -1,0 +1,104 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{cite}
+\usepackage{url}
+
+\begin{document}
+
+\title{Leitura de Quadrinhos em Outra Língua: Tradução e Narração em um Leitor Web}
+
+% Substituir pelos nomes reais dos integrantes (máximo de três, conforme o enunciado).
+\author{\IEEEauthorblockN{1\textsuperscript{st} Henrique de Freitas Araújo}
+\IEEEauthorblockA{\textit{Departamento de Computação} \\
+\textit{CEFET-MG}\\
+Divinópolis, Brasil \\
+ricosgameshenrique@gmail.com}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Jader Oliveira Silva}
+\IEEEauthorblockA{\textit{Departamento de Computação} \\
+\textit{CEFET-MG}\\
+Divinópolis, Brasil \\
+jaderoliveira28@gmail.com}
+}
+\maketitle
+
+\begin{abstract}
+Esta proposta investiga a interação com um leitor web de quadrinhos que combina reconhecimento óptico de caracteres (OCR), tradução automática e narração em áudio. O público compreende pessoas que leem em português, mas não dominam o idioma original da obra, e pessoas não alfabetizadas ou com baixa alfabetização que possam acompanhar as falas narradas em português. O recorte técnico inicial é a tradução de quadrinhos em inglês para português brasileiro, com OCR executado no navegador do próprio dispositivo e tradução por serviços externos. Um protótipo permite importar uma página, reconhecer e revisar suas falas, traduzi-las, apresentar o resultado e ouvi-lo. A investigação em Interação Humano-Computador (IHC) examinará a compreensão da narrativa, a autonomia e a experiência de uso, considerando separadamente as necessidades dos dois públicos. A próxima etapa de apresentação visual prevê limpeza de letras em balões de fundo uniforme e composição tipográfica adequada aos quadrinhos. A avaliação com participantes e a comparação sistemática de desempenho e qualidade permanecem como atividades futuras.
+\end{abstract}
+
+\begin{IEEEkeywords}
+interação humano-computador, quadrinhos digitais, tradução automática, baixa alfabetização, síntese de voz, aplicações web.
+\end{IEEEkeywords}
+
+\section{Introdução}
+Quadrinhos articulam imagens, diálogos e uma sequência narrativa cuja compreensão pode ser dificultada pelo desconhecimento do idioma original ou por dificuldades de leitura. Esses obstáculos demandam formas distintas de apresentação: leitores alfabetizados podem utilizar a tradução escrita, enquanto pessoas não alfabetizadas ou com baixa alfabetização podem necessitar de narração e de controles que não dependam exclusivamente de texto.
+
+Medhi, Sagar e Toyama investigaram interfaces para pessoas não alfabetizadas e com baixa alfabetização, destacando a relevância de representações gráficas, feedback por voz e ajuda consistente \cite{medhi2007}. Esses resultados orientam decisões de interação, mas não demonstram, por si só, a eficácia de um leitor de quadrinhos. No domínio dos quadrinhos, \emph{The Manga Whisperer} aborda a geração automática de transcrições com organização dos textos e associação de falas \cite{sachdeva2024}. Já o Comic Translate integra reconhecimento, tradução, remoção de texto e renderização \cite{comictranslate}. Portanto, a integração dessas tecnologias não é tratada como uma contribuição inédita.
+
+O problema de IHC é como apresentar as falas traduzidas e permitir seu acompanhamento visual e sonoro de maneira compreensível e controlável pelo leitor. O projeto busca reduzir barreiras linguísticas e de leitura, mantendo a relação entre o texto, a imagem e a sequência da história.
+
+\section{Delimitação e Objetivos}
+\subsection{Público, tecnologia e contexto}
+Considera-se o uso individual de um leitor web em celulares e computadores. O público é composto por: (a) pessoas alfabetizadas em português que não dominam inglês; e (b) pessoas não alfabetizadas ou com baixa alfabetização que compreendem português falado e acompanham visualmente os quadrinhos. O atendimento a pessoas cegas não constitui o foco desta proposta. Os dois grupos serão considerados separadamente no planejamento e na interpretação da avaliação.
+
+O recorte inicial contempla páginas com texto predominantemente horizontal em inglês e saída em português brasileiro. A narração corresponde à síntese das falas traduzidas; não inclui, nesta etapa, descrição automática de cenas, identificação confiável de personagens ou interpretação de efeitos sonoros. A aplicação depende da organização dos textos e não presume que ordenar coordenadas seja suficiente para determinar a ordem narrativa.
+
+\subsection{Pergunta de investigação}
+\begin{quote}
+\emph{Como a apresentação visual da tradução e os controles de narração em português apoiam a compreensão e a autonomia na leitura de quadrinhos em inglês por pessoas com barreiras linguísticas ou de alfabetização?}
+\end{quote}
+
+O objetivo geral é desenvolver e avaliar um protótipo que apoie essas formas de leitura. Os objetivos específicos são: integrar OCR local, tradução e síntese de voz; apresentar falas traduzidas preservando sua relação com a página; oferecer feedback de processamento e controle da leitura; e identificar dificuldades de compreensão, navegação e uso em cada público. Para leitores alfabetizados, será examinada a contribuição da narração opcional. Para pessoas não alfabetizadas ou com baixa alfabetização, serão priorizados a descoberta dos controles, a repetição das falas e o acompanhamento visual do áudio.
+
+\section{Solução Proposta e Estado Atual}
+\subsection{Reconhecimento e tradução}
+O projeto utiliza um ambiente de desenvolvimento derivado da WebUI do Suwayomi. O protótipo experimental atual é uma página independente; a integração ao leitor completo permanece planejada \cite{suwayomi}. A interface permite importar uma imagem local, executar OCR e revisar, reordenar ou excluir regiões reconhecidas.
+
+O reconhecimento ocorre em um \emph{Web Worker}, utilizando ONNX Runtime Web. O fluxo combina um detector RT-DETR de balões e regiões de texto, detecção de linhas com PP-OCRv5 e reconhecimento em inglês, seguido de decodificação CTC. O pós-processamento de linhas é uma aproximação voltada ao recorte inicial. O navegador pode utilizar WebGPU, com alternativa WebAssembly conforme a compatibilidade; os modelos são armazenados em cache. Isso não implica execução integral na GPU, desempenho uniforme entre aparelhos ou funcionamento como aplicativo nativo \cite{onnxweb}.
+
+A tradução pode começar automaticamente após o OCR ou ser acionada após revisão. Há uma opção online sem chave própria, via MyMemory, e uma opção Gemini com chave fornecida pelo usuário. No Gemini, a seleção de modelos é baseada em consulta à API, mas a listagem não garante acesso, cota ou compatibilidade com a requisição. Os serviços estão sujeitos a limites e condições de uso \cite{mymemory,gemini}. A imagem permanece no dispositivo durante esse fluxo; os textos reconhecidos são enviados ao provedor escolhido. A chave Gemini não é persistida pelo protótipo nem incluída na exportação.
+
+\subsection{Apresentação visual e sonora}
+Atualmente, o protótipo oferece texto editável, exportação dos resultados, sobreposição simples da tradução e narração pela síntese de voz do navegador. Essa interface de laboratório ainda exige leitura para várias ações e não é considerada uma solução validada para pessoas não alfabetizadas. Estão previstos controles com apoio visual e sonoro, repetição de falas e destaque da região narrada.
+
+A próxima etapa visual substituirá a sobreposição retangular por uma abordagem inicialmente leve: construir uma máscara das letras, estimar a cor do fundo em balões uniformes e limpar somente os pixels selecionados, preservando bordas e desenhos. O texto em português será composto com fontes adequadas a quadrinhos e suporte a acentos, com ajuste de tamanho, alinhamento e quebras de linha. A proposta busca aproximar o estilo do original, sem prometer recuperar sua fonte exata.
+
+Fundos complexos exigem tratamento distinto. O Comic Translate emprega alternativas como LaMa e AOT-GAN para reconstrução das regiões mascaradas \cite{comictranslate}. Sua adoção no navegador será considerada posteriormente, conforme qualidade, memória e compatibilidade observadas. Nos casos em que a limpeza não for confiável, a imagem original deverá ser preservada e a tradução permanecer disponível no painel. Modos de apresentação selecionáveis pelo leitor são uma possibilidade futura.
+
+\subsection{Viabilidade e limites}
+Ensaios exploratórios já executaram OCR e tradução sobre uma página de exemplo, e o acesso ao protótipo em um Galaxy S23 foi realizado via HTTPS pela rede Tailscale. Esses ensaios não constituem avaliação de usabilidade nem evidência de generalização. Foram observados textos espúrios reconhecidos na arte, erros de contexto na tradução e variação de tempo de processamento. A execução em outros aparelhos, a integração completa ao Suwayomi e a instalação como PWA ainda precisam ser verificadas.
+
+O OCR local reduz a necessidade de inferência em servidor próprio, mas não elimina custos de hospedagem, tráfego ou serviços externos. A disponibilidade de voz depende do navegador e do aparelho. Otimizações e comparações entre métodos serão conduzidas após a consolidação do fluxo de interação.
+
+\section{Busca Bibliográfica e Avaliação Planejada}
+A busca será ampliada para combinar quadrinhos digitais, tradução, apresentação multimodal, baixa alfabetização e controle da leitura. Uma expressão inicial, adaptável às bases, é:
+
+\begin{quote}
+\ttfamily\small
+("digital comics" OR manga OR "comic reader") AND (translation OR "text-to-speech" OR narration) AND (usability OR comprehension OR accessibility)
+\end{quote}
+
+Uma segunda busca enfocará \emph{low literacy}, \emph{non-literate users}, interfaces gráficas e orientação por áudio. Bases, datas, consultas e critérios de seleção serão registrados. As referências técnicas apoiam a implementação; a existência de uma lacuna científica dependerá da análise da literatura de IHC.
+
+A avaliação planejada combinará inspeção da interface e sessões com participantes, com procedimentos e recrutamento definidos junto à orientação da disciplina. As tarefas incluirão abrir uma página, acompanhar a história, localizar ou repetir uma fala e responder a perguntas de compreensão. Serão observados conclusão das tarefas, necessidade de ajuda, erros, esforço percebido, preferência e compreensão da narrativa.
+
+Para participantes alfabetizados, poderão ser comparadas tradução visual e tradução visual com áudio opcional, utilizando trechos equivalentes e alternância da ordem das condições. Para participantes não alfabetizados ou com baixa alfabetização, serão avaliados controles com apoio visual e sonoro e formas de acompanhamento da narração, sem exigir leitura como condição para realizar a tarefa. Instruções, consentimento e perguntas deverão ser apresentados em formato compreensível, incluindo leitura oral quando apropriado. O tamanho da amostra será definido conforme a viabilidade; resultados de um grupo não serão generalizados ao outro.
+
+Para distinguir dificuldades de interface de erros dos componentes automáticos, a avaliação de IHC poderá utilizar falas previamente revisadas. Uma etapa técnica separada registrará falhas de OCR, tradução, limpeza visual e tempo por etapa. A ausência de participantes de algum público será explicitada como limitação, sem alegar validação para esse grupo.
+
+\section{Considerações Finais}
+A proposta articula um protótipo web já iniciado a uma investigação sobre compreensão, autonomia e controle da leitura. O próximo desenvolvimento concentra-se na apresentação das falas, na limpeza de balões simples e na composição tipográfica, seguido da adaptação dos controles aos públicos definidos. A avaliação com participantes e a análise da literatura deverão orientar o refinamento do recorte e das decisões de interação.
+
+\begin{thebibliography}{00}
+\bibitem{medhi2007} I. Medhi, A. Sagar e K. Toyama, ``Text-free user interfaces for illiterate and semiliterate users,'' \emph{Information Technologies \& International Development}, vol. 4, no. 1, pp. 37--50, 2007. [Online]. Disponível em: \url{https://itidjournal.org/index.php/itid/article/view/243.html}
+\bibitem{sachdeva2024} R. Sachdeva e A. Zisserman, ``The manga whisperer: Automatically generating transcriptions for comics,'' em \emph{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}, 2024. [Online]. Disponível em: \url{https://openaccess.thecvf.com/content/CVPR2024/papers/Sachdeva_The_Manga_Whisperer_Automatically_Generating_Transcriptions_for_Comics_CVPR_2024_paper.pdf}
+\bibitem{comictranslate} ogkalu2, ``Comic Translate,'' repositório de software. [Online]. Disponível em: \url{https://github.com/ogkalu2/comic-translate}. Acesso em: 29 set. 2026.
+\bibitem{suwayomi} Suwayomi, ``Suwayomi WebUI,'' repositório de software. [Online]. Disponível em: \url{https://github.com/Suwayomi/Suwayomi-WebUI}. Acesso em: 29 set. 2026.
+\bibitem{onnxweb} ONNX Runtime, ``WebGPU,'' documentação técnica. [Online]. Disponível em: \url{https://onnxruntime.ai/docs/tutorials/web/ep-webgpu.html}. Acesso em: 29 set. 2026.
+\bibitem{mymemory} Translated, ``MyMemory: API technical specifications.'' [Online]. Disponível em: \url{https://mymemory.translated.net/doc/spec.php}. Acesso em: 29 set. 2026.
+\bibitem{gemini} Google, ``Gemini API: Models.'' [Online]. Disponível em: \url{https://ai.google.dev/api/models}. Acesso em: 29 set. 2026.
+\end{thebibliography}
+
+\end{document}

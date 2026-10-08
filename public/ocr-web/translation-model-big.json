@@ -1,0 +1,49 @@
+{
+  "id": "Douglasrambo/opus-mt-tc-big-en-pt-onnx",
+  "revision": "738ee4cce801ce7c519954e4b78d02d5057b6740",
+  "target": "pt_BR",
+  "prefix": ">>pob<<",
+  "prefixPt": ">>por<<",
+  "dtype": "q8",
+  "runtimeVersion": "3.8.1",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 1133,
+      "sha256": "7a133252d86d032f8ecea9b74a0145cecf0d13374db5e4bc602ba52c92153d37"
+    },
+    {
+      "name": "generation_config.json",
+      "bytes": 312,
+      "sha256": "f743934c15ef22a0971f88abd75d2471fadc1888b89837be5adc5f71d86d0d5b"
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 1981409,
+      "sha256": "47fbbc561252cfa491200d63c91bdda8a1ceeb653da63d8845ef827bf24acdfb"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "bytes": 863,
+      "sha256": "5a5b40b768575d7c8b13e6f45413b248a22a5d7669d2feec7b9a6d6921ef1871"
+    },
+    {
+      "name": "special_tokens_map.json",
+      "bytes": 79,
+      "sha256": "2783f25e6fa0bd93f6e621623b33f32d5ab978715fb8c9f2584252b03837a323"
+    },
+    {
+      "name": "onnx/encoder_model_quantized.onnx",
+      "bytes": 133106208,
+      "sha256": "66329e9fdb0f8a112ebfd4e0eee4304296d5e7891dd34438c312452dcb14a8e9"
+    },
+    {
+      "name": "onnx/decoder_model_merged_quantized.onnx",
+      "bytes": 383434406,
+      "sha256": "8bf7b7a36556e60ef53ed17b11573f63235e04a80cb36a8ca6c7312925185ca9"
+    }
+  ],
+  "bytes": 518524410,
+  "license": "CC-BY-4.0",
+  "source": "https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-pt"
+}

@@ -7,6 +7,7 @@
  */
 
 import Box from '@mui/material/Box';
+import { ReaderTranslation } from '@/features/reader/translation/ReaderTranslation.tsx';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLingui } from '@lingui/react/macro';
@@ -286,6 +287,7 @@ const BaseReader = ({
             }}
         >
             <ReaderViewer ref={scrollElementRef} />
+            <ReaderTranslation />
             <TapZoneLayout />
             <ReaderRGBAFilter />
             <ReaderAutoScroll />

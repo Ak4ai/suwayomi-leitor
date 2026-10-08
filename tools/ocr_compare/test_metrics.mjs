@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { metrics, distance } from '../../public/ocr-compare/metrics.js';
+assert.equal(distance('kitten','sitting'),3);
+assert.deepEqual(metrics('Hello, world!','HELLO world'),{cer:0,wer:0});
+assert.deepEqual(metrics('hello',''),{cer:1,wer:1});
+assert.equal(metrics('', 'hello'),null);
+assert.equal(metrics('one','one two three').wer,2);
+assert.equal(metrics('one two','two one').wer,1);
+assert.equal(metrics('abc','adc').cer,1/3);
+assert.ok(metrics('a'.repeat(5000),'a'.repeat(5000)).unavailable);
+console.log('PASS: normalization, substitutions, omissions, extra words, order, empty reference, size limit.');

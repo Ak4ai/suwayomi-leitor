@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teste de tradução local OPUS-MT</title>
+<style>body{font:16px system-ui;background:#14171d;color:#eee;margin:24px auto;padding:0 20px;max-width:850px}label{display:block;margin:16px 0 8px}textarea,select,button{font:inherit;padding:10px;border-radius:6px}textarea{box-sizing:border-box;width:100%;min-height:140px}button{margin:12px 8px 12px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#202632;padding:16px}small{color:#bac5d5}</style></head>
+<body><h1>Tradução local · OPUS-MT</h1><p>Laboratório experimental, sem chave e sem envio do texto a um serviço de tradução. A qualidade ainda está em avaliação.</p>
+<label>Modelo <select id="model"><option value="compact">Compacto multilíngue · cerca de 122 MB</option><option value="big">Inglês → português maior · mais de 500 MB</option></select></label>
+<label>Português <select id="target"><option value="pt_BR">Brasileiro</option><option value="pt">Português geral</option></select></label>
+<label><input type="checkbox" id="case"> Adaptar caixa alta (experimento; pode mudar nomes e siglas)</label>
+<label for="input">Texto inglês</label><textarea id="input">I DON'T KNOW. I'M...JUST ONE PERSON. I DON'T KNOW HOW TO FIX THE WORLD.</textarea>
+<button id="translate">Traduzir localmente</button><button id="cancel" disabled>Cancelar</button>
+<p id="status" role="status" aria-live="polite">O modelo será carregado ao traduzir.</p><small>Os modelos e o runtime precisam ser preparados no projeto antes do primeiro uso. Após carregar, o processamento usa WASM no aparelho.</small>
+<h2>Resultado</h2><pre id="result"></pre><details><summary>Entrada utilizada e medidas</summary><pre id="details"></pre></details>
+<script type="module" src="./translation-local-demo.js"></script></body></html>

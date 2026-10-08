@@ -7,6 +7,7 @@
  */
 
 import { memo, useCallback } from 'react';
+import { useNativeTranslation } from '@/features/reader/translation/NativeTranslation.ts';
 import type { SpinnerImageProps } from '@/base/components/SpinnerImage.tsx';
 import { SpinnerImage } from '@/base/components/SpinnerImage.tsx';
 import type { IReaderSettings, ReaderCustomFilter, ReaderPagerProps } from '@/features/reader/Reader.types.ts';
@@ -91,6 +92,8 @@ const BaseReaderPage = ({
         isLoaded?: boolean;
     }) => {
     const { src } = props;
+    const { state: translation } = useNativeTranslation();
+    const translatedSrc = translation.enabled ? translation.pages[src]?.image : null;
 
     const isTabletWidth = MediaQuery.useIsTabletWidth();
     const scrollbar = useReaderScrollbarStore((state) => state);
@@ -100,7 +103,13 @@ const BaseReaderPage = ({
         [onLoad, pagesIndex, src, isPrimaryPage],
     );
     const handleError = useCallback(() => onError?.(pageIndex, src), [onError, pageIndex, src]);
-    const updateRef = useCallback((element: HTMLElement | null) => setRef?.(pagesIndex, element), [pagesIndex, setRef]);
+    const updateRef = useCallback(
+        (element: HTMLElement | null) => {
+            element?.setAttribute('data-ihc-page', String(pageIndex));
+            setRef?.(pagesIndex, element);
+        },
+        [pagesIndex, pageIndex, setRef],
+    );
 
     if (!display && !shouldLoad) {
         return null;
@@ -109,6 +118,7 @@ const BaseReaderPage = ({
     return (
         <SpinnerImage
             {...props}
+            src={translatedSrc || src}
             onLoad={handleLoad}
             onError={handleError}
             shouldLoad={shouldLoad}
