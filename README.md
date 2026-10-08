@@ -14,6 +14,14 @@ O projeto busca facilitar o acesso de quem não conhece o idioma original, inclu
 - Renderização Canvas ou SVG, encaixe das falas, fontes locais e ampliação automática quando necessária.
 - Processamento antecipado do capítulo inteiro, uma página por vez, priorizando a leitura atual; cache no IndexedDB.
 
+## Exemplos: antes e depois
+
+Veja a **[galeria de exemplos](EXEMPLOS.md)** para comparar limpeza leve, IA, híbrido, Canvas, SVG e os tradutores com resultados salvos.
+
+| Antes | Depois: híbrido + SVG, tradução de referência |
+|---|---|
+| ![Balões originais em inglês](docs/examples/original.png) | ![Balões redesenhados em português](docs/examples/hibrido-svg.png) |
+
 ## Executar no Windows
 
 Requisitos: Git, Node.js com Corepack/pnpm, Python e Java 21 para o servidor local. O desenvolvimento atual usa PowerShell.
@@ -77,7 +85,7 @@ As avaliações documentadas foram feitas principalmente no PC. A integração m
 - [Limpeza com IA e modo híbrido](AI-INPAINT.md), [renderização SVG](SVG-READER.md) e [OPUS-MT](OPUS-MT-TEST.md).
 - [README original do Suwayomi](README-UPSTREAM.md).
 
-Os relatórios descrevem experiências em momentos diferentes do desenvolvimento. Imagens de HQs, resultados locais e bibliotecas utilizadas nos testes não acompanham o repositório; ferramentas de diagnóstico podem exigir esses arquivos locais.
+Os relatórios descrevem experiências em momentos diferentes do desenvolvimento. Páginas completas de HQs, resultados locais e bibliotecas utilizadas nos testes não acompanham o repositório, exceto os recortes selecionados da galeria; ferramentas de diagnóstico podem exigir esses arquivos locais.
 
 ## Origem, licenças e créditos
 

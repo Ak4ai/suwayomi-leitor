@@ -1,0 +1,112 @@
+[
+  {
+    "image": "original.png",
+    "source": "ocr-runs/sorcerer-supreme-1/020.jpg",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "leve-canvas.png",
+    "source": "ocr-runs/sorcerer-supreme-1/svg-raster.png",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "leve-svg.png",
+    "source": "ocr-runs/sorcerer-supreme-1/page20-translated.svg",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "ia-svg.png",
+    "source": "ocr-runs/sorcerer-supreme-1/ai-wasm-all.svg",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "hibrido-svg.png",
+    "source": "ocr-runs/sorcerer-supreme-1/ai-wasm-hybrid.svg",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "opus-compacto.png",
+    "source": "ocr-runs/sorcerer-supreme-1/opus-sentence-check.json (saved translation, current light SVG renderer)",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "opus-maior.png",
+    "source": "ocr-runs/sorcerer-supreme-1/opus-big-sentence-check.json (saved translation, current light SVG renderer)",
+    "clip": [
+      465,
+      1910,
+      500,
+      650
+    ]
+  },
+  {
+    "image": "google-original.png",
+    "source": "ocr-runs/bbato-batman-1/005.jpg",
+    "clip": [
+      115,
+      45,
+      165,
+      160
+    ]
+  },
+  {
+    "image": "google.png",
+    "source": "ocr-runs/bbato-batman-1/translation-render-check.json",
+    "clip": [
+      115,
+      45,
+      165,
+      160
+    ]
+  },
+  {
+    "image": "gemini-original.png",
+    "source": "../imagensinputteste/7.jpg",
+    "clip": [
+      624,
+      54,
+      287,
+      174
+    ]
+  },
+  {
+    "image": "gemini.png",
+    "source": "ocr-runs/gemini-live-7.json; model gemini-2.5-flash",
+    "clip": [
+      624,
+      54,
+      287,
+      174
+    ]
+  }
+]
