@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) Contributors to the Suwayomi project
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -6,9 +14,21 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useNativeTranslation } from './NativeTranslation.ts';
+import {
+    selectFlags,
+    type TranslationRenderer,
+    useNativeTranslation,
+} from '@/features/reader/translation/NativeTranslation.ts';
+
+const LOCAL_PROXY_HELP = 'No modo local, o texto passa pelo servidor do leitor antes de chegar ao tradutor.';
+const PROVIDER_HELP: Record<string, string | undefined> = {
+    opus: 'Tradução no aparelho, sem chave. Experimental: confira o sentido das falas.',
+    gemini: undefined,
+};
+
 export function ReaderTranslationControls() {
-    const { state, module, error } = useNativeTranslation();
+    const { state: flags, module, error } = useNativeTranslation(selectFlags);
+    const [enabled, showInfo, animate, outline] = flags.split(':').map((value) => value === 'true');
     const [editing, setEditing] = useState(false),
         [provider, setProvider] = useState('google'),
         [opusVariant, setOpusVariant] = useState<'compact' | 'big'>('compact'),
@@ -16,7 +36,7 @@ export function ReaderTranslationControls() {
         [key, setKey] = useState(''),
         [model, setModel] = useState(''),
         [mode, setMode] = useState('wasm'),
-        [renderer, setRenderer] = useState<'canvas' | 'svg'>('canvas'),
+        [renderer, setRenderer] = useState<TranslationRenderer>('canvas'),
         [inpaint, setInpaint] = useState<'local' | 'hybrid' | 'ai'>('local'),
         [inpaintDevice, setInpaintDevice] = useState<'auto' | 'wasm'>('auto'),
         [remember, setRemember] = useState(true),
@@ -29,7 +49,7 @@ export function ReaderTranslationControls() {
                 sx={{ display: 'flex' }}
                 control={
                     <Switch
-                        checked={state.enabled}
+                        checked={enabled}
                         disabled={!module}
                         onChange={(_, value) => module?.toggle('enabled', value)}
                     />
@@ -40,13 +60,38 @@ export function ReaderTranslationControls() {
                 sx={{ display: 'flex' }}
                 control={
                     <Switch
-                        checked={state.showInfo}
+                        checked={showInfo}
                         disabled={!module}
                         onChange={(_, value) => module?.toggle('showInfo', value)}
                     />
                 }
                 label="Mostrar informações da tradução"
             />
+            <FormControlLabel
+                sx={{ display: 'flex' }}
+                control={
+                    <Switch
+                        checked={animate}
+                        disabled={!module}
+                        onChange={(_, value) => module?.toggle('animate', value)}
+                    />
+                }
+                label="Animar tradução ao exibir a página"
+            />
+            <FormControlLabel
+                sx={{ display: 'flex' }}
+                control={
+                    <Switch
+                        checked={outline}
+                        disabled={!module}
+                        onChange={(_, value) => module?.toggle('outline', value)}
+                    />
+                }
+                label="Destacar balões traduzidos"
+            />
+            <Typography variant="caption" color="text.secondary" component="p">
+                Toque num balão traduzido para ver o texto original; toque de novo para voltar.
+            </Typography>
             {error && <Typography color="error">{error}</Typography>}
             <Button
                 size="small"
@@ -72,13 +117,7 @@ export function ReaderTranslationControls() {
                     <TextField
                         select
                         label="Tradutor"
-                        helperText={
-                            provider === 'opus'
-                                ? 'Tradução no aparelho, sem chave. Experimental: confira o sentido das falas.'
-                                : provider === 'gemini'
-                                  ? undefined
-                                  : 'No modo local, o texto passa pelo servidor do leitor antes de chegar ao tradutor.'
-                        }
+                        helperText={provider in PROVIDER_HELP ? PROVIDER_HELP[provider] : LOCAL_PROXY_HELP}
                         size="small"
                         value={provider}
                         onChange={(e) => setProvider(e.target.value)}
@@ -120,10 +159,11 @@ export function ReaderTranslationControls() {
                         label="Desenho do texto"
                         size="small"
                         value={renderer}
-                        onChange={(e) => setRenderer(e.target.value as 'canvas' | 'svg')}
+                        onChange={(e) => setRenderer(e.target.value as TranslationRenderer)}
                     >
                         <MenuItem value="canvas">Canvas (imagem)</MenuItem>
-                        <MenuItem value="svg">SVG (texto vetorial · experimental)</MenuItem>
+                        <MenuItem value="svg-light">SVG leve (texto vetorial · fundo JPEG)</MenuItem>
+                        <MenuItem value="svg">SVG (texto vetorial · fundo PNG sem perdas)</MenuItem>
                     </TextField>
                     <TextField
                         select
@@ -178,7 +218,9 @@ export function ReaderTranslationControls() {
                                     try {
                                         const values = await module?.getModels(key);
                                         setModels(values || []);
-                                        if (values?.length) setModel(values[0].id);
+                                        if (values?.length) {
+                                            setModel(values[0].id);
+                                        }
                                         setMessage('');
                                     } catch (e) {
                                         setMessage(String(e));

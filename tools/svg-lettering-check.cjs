@@ -16,13 +16,13 @@ const fs=require('node:fs/promises');
     const vectorStart=performance.now(),vector=await renderLetteringSVG(image,segments),svgMs=performance.now()-vectorStart;
     const parsed=new DOMParser().parseFromString(vector.svg,'image/svg+xml');if(parsed.querySelector('parsererror'))throw Error('Invalid SVG');
     const src=URL.createObjectURL(vector.blob),img=new Image();try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('SVG image failed'));img.src=src;});
-     const output=document.createElement('canvas');output.width=image.width;output.height=image.height;output.getContext('2d').drawImage(img,0,0);
-     const zoom=document.createElement('canvas');zoom.width=1200;zoom.height=800;zoom.getContext('2d').drawImage(img,630,180,440,300,0,0,1200,800);
-     const textNodes=[...parsed.querySelectorAll('text')].map(node=>node.textContent);
+     const output=document.createElement('canvas');output.width=canvas.width;output.height=canvas.height;output.getContext('2d').drawImage(img,0,0);
+     const zoom=document.createElement('canvas');zoom.width=1200;zoom.height=800;const f=canvas.width/image.width;zoom.getContext('2d').drawImage(img,630*f,180*f,440*f,300*f,0,0,1200,800);
+     const textNodes=[...parsed.querySelectorAll('g[data-segment] > title')].map(node=>node.textContent),glyphPaths=parsed.querySelectorAll('g[data-segment] > path').length,textFallback=parsed.querySelectorAll('text').length;
      const fullText=vector.textLayers.every(layer=>{const segment=segments.find(s=>s.id===layer.id);return layer.lines.map(line=>line.text).join(' ').replace(/\s+/g,' ').trim()===segment.translation.replace(/\s+/g,' ').trim();});
-     const originalDimensions=img.naturalWidth===image.width&&img.naturalHeight===image.height;
-     if(!fullText||!originalDimensions||!textNodes.length)throw Error('SVG text/dimensions regression');
-     return {canvasApplied:raster.applied,svgApplied:vector.applied,notes:[...vector.notes],cleanupQuality:[...vector.cleanupQuality],canvasMs,svgMs,svgBytes:vector.blob.size,fullText,originalDimensions,textNodes:textNodes.length,embeddedFonts:parsed.querySelector('style').textContent.includes('data:font/ttf;base64'),externalResources:[...parsed.querySelectorAll('[href]')].some(node=>!node.getAttribute('href').startsWith('data:')),svg:vector.svg,raster:canvas.toDataURL(),vector:output.toDataURL(),zoom:zoom.toDataURL()};
+     const rasterDimensions=img.naturalWidth===canvas.width&&img.naturalHeight===canvas.height;
+     if(!fullText||!rasterDimensions||!textNodes.length||!glyphPaths||textFallback)throw Error('SVG text/dimensions/outline regression');
+     return {canvasApplied:raster.applied,svgApplied:vector.applied,notes:[...vector.notes],cleanupQuality:[...vector.cleanupQuality],canvasMs,svgMs,svgBytes:vector.blob.size,fullText,rasterDimensions,textNodes:textNodes.length,glyphPaths,textFallback,externalResources:[...parsed.querySelectorAll('[href]')].some(node=>!node.getAttribute('href').startsWith('data:')),svg:vector.svg,raster:canvas.toDataURL(),vector:output.toDataURL(),zoom:zoom.toDataURL()};
     }finally{URL.revokeObjectURL(src);}
    }finally{image.close();}
   },{data,segments});

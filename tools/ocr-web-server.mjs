@@ -16,6 +16,7 @@ files.set('/', path.join(ui,'index.html'));
 for (const name of ['ort.webgpu.min.mjs','ort-wasm-simd-threaded.jsep.mjs','ort-wasm-simd-threaded.jsep.wasm','ort-wasm-simd-threaded.asyncify.mjs','ort-wasm-simd-threaded.asyncify.wasm']) {
     files.set(`/vendor/${name}`, path.join(runtime,name));
 }
+files.set('/vendor/opentype.module.js', path.join(root,'tools/ocr-web-runtime/node_modules/opentype.js/dist/opentype.module.js'));
 for (const [name, local] of Object.entries({
     'rtdetr.onnx':'rtdetr.onnx',
     'lines.onnx':'paddle/ch_PP-OCRv5_det_mobile.onnx',

@@ -31,6 +31,11 @@ export interface SpinnerImageProps {
     shouldLoad?: boolean;
 
     src: string;
+    /**
+     * Displayed instead of the loaded src without changing the element's layout. Use a density descriptor
+     * ("url 2x") so the image keeps the intrinsic size of src.
+     */
+    srcSet?: string;
     alt: string;
 
     spinnerStyle?: SxProps<Theme> & { small?: boolean };
@@ -60,6 +65,7 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
         disableCors,
         ignoreQueue,
         src,
+        srcSet,
         alt,
         onLoad,
         onError,
@@ -203,6 +209,7 @@ export const SpinnerImage = ({ ref, ...props }: SpinnerImageProps) => {
                     ref={ref}
                     crossOrigin={disableCors ? undefined : 'anonymous'}
                     src={imageSourceUrl}
+                    srcSet={imageSourceUrl ? srcSet : undefined}
                     alt={alt}
                     draggable={false}
                 />

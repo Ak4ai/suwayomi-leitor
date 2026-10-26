@@ -182,7 +182,9 @@ const getReaderDimensionStyling = (
                 ...applyStyles(shouldStretchPage, {
                     minHeight: fullHeight,
                 }),
-                maxHeight: fullHeight,
+                ...applyStyles(!isContinuousVerticalReadingMode(readingMode), {
+                    maxHeight: fullHeight,
+                }),
             };
         case ReaderPageScaleMode.SCREEN:
             return {
@@ -205,7 +207,9 @@ const getReaderDimensionStyling = (
                     }),
                 }),
                 maxWidth: fullWidth,
-                maxHeight: fullHeight,
+                ...applyStyles(!isContinuousVerticalReadingMode(readingMode), {
+                    maxHeight: fullHeight,
+                }),
             };
         case ReaderPageScaleMode.ORIGINAL:
             return {};

@@ -11,6 +11,7 @@ const copies = [
         'ort-wasm-simd-threaded.asyncify.mjs',
         'ort-wasm-simd-threaded.asyncify.wasm',
     ].map((name) => [`tools/ocr-web-runtime/node_modules/onnxruntime-web/dist/${name}`, `vendor/${name}`]),
+    ['tools/ocr-web-runtime/node_modules/opentype.js/dist/opentype.module.js', 'vendor/opentype.module.js'],
     ['.ocr-models/rtdetr.onnx', 'models/rtdetr.onnx'],
     ['.ocr-models/paddle/ch_PP-OCRv5_det_mobile.onnx', 'models/lines.onnx'],
     ['.ocr-models/paddle/en_PP-OCRv5_rec_mobile.onnx', 'models/recognizer.onnx'],

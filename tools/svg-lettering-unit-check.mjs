@@ -1,14 +1,25 @@
 import assert from 'node:assert/strict';
 import {buildLetteringSVG} from '../public/ocr-web/lettering-svg.js';
-import {Lettering} from '../public/ocr-web/lettering.js';
+import {Lettering,balloonOutline} from '../public/ocr-web/lettering.js';
 import {estimateLetteringSurface,recoverLetteringInterior,reconstructLettering} from '../public/ocr-web/lettering-surface.js';
 
-const svg=buildLetteringSVG({width:500,height:730,rasterWidth:1200,rasterHeight:1752,background:'data:image/png;base64,AA==',fontCSS:'',textLayers:[{id:'s1',style:{family:'comic',weight:'900',slant:'normal'},size:18,stroke:.8,ink:'#111',lines:[{x:100,y:200,text:'Olá <texto> & "aspas"\u0000'}]}]});
-assert.ok(svg.includes('width="500" height="730" viewBox="0 0 1200 1752"'));
+const svg=buildLetteringSVG({width:1200,height:1752,rasterWidth:1200,rasterHeight:1752,background:'data:image/png;base64,AA==',fontCSS:'',textLayers:[{id:'s1',style:{family:'comic',weight:'900',slant:'normal'},size:18,stroke:.8,ink:'#111',lines:[{x:100,y:200,text:'Olá <texto> & "aspas"\u0000'}]}]});
+assert.ok(svg.includes('width="1200" height="1752" viewBox="0 0 1200 1752" text-rendering="geometricPrecision"'));
 assert.ok(svg.includes('Olá &lt;texto&gt; &amp; &quot;aspas&quot;'));
 assert.ok(!svg.includes('\u0000')&&!svg.includes('<texto>'));
 assert.equal((svg.match(/<text /g)||[]).length,1);
 assert.ok(svg.includes('stroke-width="0.27"'));
+// Outlined glyphs: one <path> per line, Canvas reinforcement, text in <title>.
+const outlined=buildLetteringSVG({width:10,height:10,rasterWidth:10,rasterHeight:10,background:'data:image/png;base64,AA==',fontCSS:'',textLayers:[{id:'s2',style:{family:'comic',weight:'900',slant:'normal'},size:20,stroke:.9,ink:'#fff',lines:[{x:5,y:5,text:'A & B'}],paths:['M0 0L1 1Z']}]});
+assert.ok(outlined.includes('<title>A &amp; B</title><path d="M0 0L1 1Z"/>'));
+assert.ok(outlined.includes('stroke="#fff" stroke-width="0.9"'));
+assert.ok(!outlined.includes('<text')&&!outlined.includes('<style>'));
+// Light variant: glyphs defined once, placed with <use>, stroke in font units.
+const light=buildLetteringSVG({width:10,height:10,rasterWidth:10,rasterHeight:10,background:'data:image/jpeg;base64,AA==',fontCSS:'',glyphs:new Map([['f:1',{id:'g0',d:'M0 0L9 9Z'}]]),textLayers:[{id:'s3',style:{family:'comic',weight:'900',slant:'normal'},size:20,stroke:.9,ink:'#111',lines:[{x:5,y:6,text:'AA'}],glyphLines:[{x:5,y:6,scale:.02,uses:[['g0',-500],['g0',0]]}]}]});
+assert.ok(light.includes('<defs><path id="g0" d="M0 0L9 9Z"/></defs>'));
+assert.ok(light.includes('<g transform="translate(5 6) scale(0.02)"><use href="#g0" x="-500"/><use href="#g0" x="0"/></g>'));
+assert.ok(light.includes('stroke-width="45"')&&light.includes('<title>AA</title>'));
+assert.ok(!light.includes('<text')&&!light.includes('<style>'));
 assert.ok(svg.includes('stroke-linejoin="round"'));
 assert.ok(svg.includes('font-weight="700"'));
 
@@ -40,4 +51,12 @@ const layout=Lettering.prototype.layout.call({image:{width:500}},ctx,'Texto comp
 assert.ok(layout);
 assert.equal(layout.lines.map(line=>line.text).join(' '),'Texto completo');
 for(const line of layout.lines)assert.ok(line.y>=35&&line.y<=81);
-console.log(JSON.stringify({passed:true,svgEscaping:true,originalDimensions:true,tonalYellow:true,concavityPreserved:true,enclosedHoleFilled:true,shiftedLayout:true,unmaskedInkRecovered:true,borderProtected:true,sourceUnchanged:true}));
+// Balloon outline: smoothed spans (one jagged row ignored), closed shape around the interior.
+const spans=Array.from({length:60},(_,row)=>row===30?{left:48,right:52}:{left:20-Math.round(10*Math.sin(row/60*Math.PI)),right:80+Math.round(10*Math.sin(row/60*Math.PI))});
+const ring=balloonOutline({x:0,y:100,spans});
+assert.ok(ring.length>=40&&ring.length<=64);
+assert.ok(ring[0][1]===100&&ring[0][0]>=18&&ring[0][0]<=20);
+assert.ok(ring.every(([x])=>x<=21||x>=79));
+assert.equal(Math.max(...ring.map(([,y])=>y)),160);
+assert.ok(balloonOutline({spans:[],textArea:{x:1,y:2,w:3,h:4}}).length===4);
+console.log(JSON.stringify({passed:true,svgEscaping:true,rasterDimensions:true,lightGlyphs:true,balloonOutline:true,tonalYellow:true,concavityPreserved:true,enclosedHoleFilled:true,shiftedLayout:true,unmaskedInkRecovered:true,borderProtected:true,sourceUnchanged:true}));

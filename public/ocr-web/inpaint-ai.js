@@ -1,4 +1,4 @@
-import { Lettering, suggestLettering } from './lettering.js';
+import { Lettering, createCanvas, suggestLettering } from './lettering.js';
 
 function geometry(region) {
     return {
@@ -70,7 +70,7 @@ export function prepareAIPatches(image, segments, { strategy = 'all' } = {}) {
             const patch = { id: segment.id, x: region.x, y: region.y, w: region.w, h: region.h, mask };
             if (strategy === 'hybrid' && region.cleanup === 'flat-colour') {
                 if (!background) {
-                    background = document.createElement('canvas');
+                    background = createCanvas();
                     background.width = image.width;
                     background.height = image.height;
                     background.getContext('2d').drawImage(image, 0, 0);
@@ -214,7 +214,7 @@ export class AIInpainter {
         }
         // Coarse fallback cannot infer the original lettering style. Choose a
         // readable polarity from the repaired text area rather than guessing.
-        const canvas = document.createElement('canvas');
+        const canvas = createCanvas();
         canvas.width = result.cleaned.width;
         canvas.height = result.cleaned.height;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });

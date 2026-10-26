@@ -420,5 +420,13 @@
             },
         },
     ],
-    "ignorePatterns": ["src/lib/graphql/generated/**", "tools/eslint-plugin-header.cjs"],
+    // IHC: standalone browser modules (relative imports, no bundler) and check scripts, outside the React app.
+    "ignorePatterns": [
+        "src/lib/graphql/generated/**",
+        "tools/eslint-plugin-header.cjs",
+        "public/ocr-web/**",
+        "tools/*.js",
+        "tools/*.cjs",
+        "tools/*.mjs",
+    ],
 }
