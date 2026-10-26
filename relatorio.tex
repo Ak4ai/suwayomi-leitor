@@ -1,0 +1,224 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title{UXAgent para um Leitor de Quadrinhos com Tradução:\\Modelagem Rastreável de um Proxy de Leitor com Proficiência Limitada em Inglês}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Henrique de Freitas Araújo}
+\IEEEauthorblockA{\textit{Departamento de Computação} \\
+\textit{CEFET-MG}\\
+Divinópolis, Brasil \\
+ricosgames.henrique@gmail.com}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Jader Oliveira Silva}
+\IEEEauthorblockA{\textit{Departamento de Computação} \\
+\textit{CEFET-MG}\\
+Divinópolis, Brasil \\
+jaderoliveira28@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+Este artigo especifica um UXAgent baseado em modelo de linguagem para depurar o protocolo de avaliação de um leitor de quadrinhos com tradução. O artefato web reconhece texto em inglês, traduz para português, redesenha a página e permite restaurar o original e consultar um painel com OCR e tradução. O agente representa de forma restrita uma persona adulta brasileira com proficiência limitada em leitura de inglês. A representação não depende de interpretação teatral: cobertura lexical, memória contextual, política de apoio e estratégia compensatória são mecanismos externos, parametrizados e desligáveis. São definidos persona, matriz de rastreabilidade, arquitetura, tarefas separadas, protocolo de teste, esquema de eventos, dicionário de métricas e critérios para uma eventual validação futura. Nesta etapa, os próprios autores executam testes técnicos e exploratórios; não há recrutamento de participantes adultos externos. Consequentemente, o agente permanece um proxy exploratório não validado e seus resultados não sustentam conclusões populacionais.
+\end{abstract}
+
+\begin{IEEEkeywords}
+interação humano-computador, UXAgent, tradução automática, quadrinhos digitais, persona operacional, validação.
+\end{IEEEkeywords}
+
+\section{Introdução}
+Quadrinhos digitais combinam linguagem verbal, organização espacial e elementos visuais cuja interpretação depende da relação entre balões, personagens e sequência narrativa. Quando a obra está em um idioma que o leitor não domina, a tradução automática pode ampliar o acesso ao conteúdo, mas também introduzir ambiguidades, erros de reconhecimento e escolhas linguísticas inadequadas ao contexto. Pesquisas sobre tradução de mangás indicam que a qualidade do resultado depende não apenas do texto isolado, mas também da estrutura da página e do contexto narrativo \cite{hinami2021,kaino2024,sachdeva2024}.
+
+O sistema considerado neste trabalho é um leitor web capaz de reconhecer textos em inglês, produzir traduções para o português e redesenhar as falas na página \cite{forkrepo}. Além da versão traduzida, a interface permite recuperar a imagem original da página, alternar um balão isolado entre tradução e original com um clique e consultar um painel com o texto reconhecido, a tradução correspondente e eventuais erros de processamento. Opcionalmente, cada página começa exibindo o texto original e passa à tradução balão a balão, na ordem de leitura, e os balões traduzidos recebem um realce discreto. Esses recursos tornam a tradução inspecionável e reversível, oferecendo ao leitor meios para comparar representações e recuperar-se de resultados inadequados. Entretanto, a existência dos controles não demonstra, por si só, que eles favoreçam a compreensão ou que possam ser avaliados por um protocolo confiável.
+
+Nesse contexto, investiga-se como a alternância entre a página original, a tradução redesenhada e o painel textual pode apoiar a compreensão e o comportamento de inspeção de leitores brasileiros de quadrinhos em inglês. Nesta etapa, porém, não se pretende medir esse efeito em uma amostra do público-alvo. Os testes serão conduzidos pelos próprios autores para verificar o funcionamento da interface, a clareza das tarefas, os critérios de sucesso, os eventos registrados e as métricas propostas. Essa verificação não deve ser confundida com avaliação de usabilidade ou validação empírica da persona.
+
+Este artigo apresenta a modelagem de um UXAgent baseado em modelo de linguagem para apoiar essa verificação preliminar. O agente funciona como um proxy restrito de um leitor adulto com proficiência limitada em inglês e incorpora mecanismos externos, parametrizados e desligáveis para cobertura lexical, memória contextual, uso de apoio e estratégia de verificação. A contribuição compreende a definição da persona, a matriz de rastreabilidade, a arquitetura do agente, tarefas separadas de ajuste técnico e verificação, o protocolo de teste, a instrumentação, as métricas e os limites éticos de utilização.
+
+A proposta distingue três níveis de evidência: fundamentação conceitual, que relaciona leitura em segunda língua, tradução e interação; verificação técnica e exploratória, executada pelos autores para examinar o sistema e a integridade dos registros; e validação empírica, que exigiria dados independentes de participantes do público-alvo e permanece fora do escopo atual. Assim, o UXAgent é empregado para depurar o protocolo e explorar cenários sintéticos, sem produzir conclusões sobre o público representado.
+
+\section{Perfil e persona}
+\subsection{Faixas de variação antes da persona fixa}
+O perfil é adulto, não clínico, e definido pela relação entre competência de leitura em inglês e uma interface com conteúdo-fonte em inglês. Não se presume que brasileiros com proficiência limitada formem um grupo uniforme. Antes da fixação, o modelo admite: cobertura lexical do trecho entre 70\% e 100\%; memória de contexto entre um e seis balões; limiar de consulta entre 0 e 0,5 de palavras não acessíveis; e estratégias que variam entre depender da tradução, comparar original e tradução ou consultar o painel.
+
+Estudos de leitura em segunda língua mostram associação entre cobertura lexical e compreensão, mas com variância explicada pequena; em um experimento com 94 aprendizes avançados, cobertura e dificuldade percebida explicaram apenas 11\% e 8\% da variação, respectivamente \cite[pp.~1--2, 12--15]{webb2025}. Logo, cobertura lexical será apenas um mecanismo controlável, não uma definição total da pessoa. Evidência sobre tradução automática como apoio indica utilidade para obter uma visão geral e acessar vocabulário, mas deriva de uma amostra e tarefa diferentes deste projeto \cite[pp.~1--2, 12--15]{chung2023}.
+
+\subsection{Persona delimitada}
+\textbf{Rafael}, 24 anos, é um personagem fictício, brasileiro, leitor ocasional de quadrinhos digitais e usuário habitual de celular e computador. Lê português fluentemente e reconhece vocabulário cotidiano em inglês, mas perde relações entre falas quando há expressões menos frequentes, elipses ou vários balões. Seu objetivo é acompanhar uma história disponível em inglês sem interromper continuamente a leitura. Ele não é descrito como incapaz: usa contexto visual e palavras conhecidas e, diante de incoerência, compara a tradução com o original ou abre o painel. A limitação relevante emerge quando a página exige acesso lexical e manutenção de contexto maiores do que os suportados no momento.
+
+A instância inicial usa cobertura lexical $c=0{,}85$, janela de contexto $k=3$ balões, limiar de apoio $u=0{,}20$ e verificação após incoerência habilitada. Esses valores são hipóteses operacionais, não estimativas populacionais. A comparação desta etapa ocorre entre essa instância, um agente de referência com $c=1{,}00$ e $k=6$, e uma política sem mecanismos. As sessões conduzidas pelos autores servem somente como inspeção técnica do fluxo, não como grupo de comparação representativo. A revisão de estereótipos proíbe associar baixa proficiência a baixa inteligência, escolaridade, idade, nacionalidade, impulsividade ou incompetência digital.
+
+\section{Matriz de rastreabilidade}
+Cada linha da Tabela~\ref{tab:trace} liga evidência, manifestação, mecanismo, parâmetro, evento e previsão. ``H'' indica hipótese operacional; ``D'', associação documentada; nenhuma linha é tratada como calibrada ou validada nesta entrega.
+
+\begin{table*}[t]
+\caption{Matriz de rastreabilidade da persona operacional.}
+\label{tab:trace}
+\centering\scriptsize
+\begin{tabularx}{\textwidth}{p{0.7cm}p{2.2cm}Y Y Y Y Y}
+\toprule
+ID e fonte & Manifestação e demanda da interface & Modelo de IHC & Mecanismo externo & Parâmetro & Evento e métrica & Previsão, limite e estado \\
+\midrule
+R1 \cite[pp.~1--2, 12--15]{webb2025} & Palavras não acessíveis reduzem a informação disponível; a tradução deve estar acessível. & Recursos cognitivos e reconhecimento em vez de recordação. & Máscara lexical determinística sobre tokens ingleses. & $c$: proporção, $[0{,}70,1]$, inicial 0,85. & \code{token\_masked}; sucesso de compreensão. & Menor $c$ aumenta uso de apoio e pode reduzir sucesso; cobertura explica apenas parte da compreensão. D/H. \\
+R2 \cite[pp.~1--2]{kaino2024} & Referências entre balões podem se perder; preservar sequência e contexto. & Memória de trabalho e cognição distribuída. & Buffer FIFO de balões observáveis, fora do LLM. & $k$: balões, $[1,6]$, inicial 3. & \code{context\_evicted}; erros de relação/falante. & Menor $k$ aumenta enganos em perguntas relacionais; transferência do japonês--inglês é limitada. D/H. \\
+R3 \cite[pp.~1--2, 12--15]{chung2023} & Tradução pode fornecer visão geral; alternância e painel devem ser encontráveis. & Ação situada e externalização da informação. & Controlador oferece apoio quando razão desconhecida excede limiar. & $u$: razão, $[0,0{,}5]$, inicial 0,20. & \code{support\_opened}; usos por tarefa. & Apoio cresce com palavras desconhecidas; estudo original não usa quadrinhos nem português. D/H. \\
+R4 (capacidade) \cite[pp.~37--41]{medhi2007} & Usuário usa pistas visuais e verificação; interface deve permitir recuperação reversível. & Controle pelo usuário, visibilidade e prevenção de erro. & Regra desligável: diante de incoerência, restaurar original e/ou abrir painel antes de responder. & $v\in\{0,1\}$; inicial 1. & \code{original\_shown}, \code{balloon\_toggle}, \code{panel\_opened}, correção após apoio. & $v=1$ reduz erros detectáveis ao custo de ações extras; não implica que toda pessoa use a estratégia. H. \\
+R5 \cite[pp.~2--4]{sachdeva2024} & Ordem estrutural incorreta compromete leitura; falha técnica não deve virar traço da persona. & Engenharia cognitiva e modelo conceitual. & Validador separa erro de OCR/ordem de erro de interação. & $q$: qualidade mínima do estímulo, $[0,1]$, inicial 0,95. & \code{technical\_failure}; exclusão justificada. & Estímulo abaixo de $q$ é falha técnica, não insucesso da persona. D/H. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Arquitetura e mecanismos}
+Na Fig.~\ref{fig:arch}, ambiente, observação, estado, política, controlador e avaliador permanecem componentes distintos. A política produz uma proposta, mas somente o controlador pode executar uma ação válida. Formalmente,
+\begin{equation}
+a_t^{p}\sim\pi_{M,T}(\cdot\mid o_t,x_t,\tau),\qquad
+x_{t+1}=F_{\theta}(x_t,o_t,a_t),
+\end{equation}
+onde $M$ identifica modelo/versão, $T$ é temperatura, $\tau$ é a tarefa e $\theta=(c,k,u,v,q)$ está em arquivo versionado. O LLM recebe estado perceptível, objetivo e ações permitidas; não recebe respostas corretas, métrica final, dados humanos de validação ou conteúdo reservado de outras tarefas.
+
+  \begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[node distance=4mm, every node/.style={font=\scriptsize}, box/.style={draw,rounded corners,align=center,text width=3.2cm,minimum height=6mm}, arr/.style={-{Latex[length=2mm]}}]
+  \node[box] (env) {Interface Suwayomi Leitor};
+  \node[box,below=of env] (obs) {Adaptador de observação\\estado visível e ações};
+  \node[box,below=of obs] (state) {Estado operacional $x_t$\\máscara, buffer, limiares};
+\node[box,below=of state] (llm) {Política LLM\\ação proposta + justificativa curta};
+\node[box,below=of llm] (ctl) {Controlador\\checagem, mecanismos e \emph{toggles}};
+\node[box,below=of ctl] (eval) {Instrumentador e avaliador externo};
+\draw[arr] (env)--(obs); \draw[arr] (obs)--(state); \draw[arr] (state)--(llm);
+\draw[arr] (llm)--(ctl); \draw[arr] (ctl.east) -- ++(0.8,0) node[right]{executa} |- (env.east);
+\draw[arr] (env.west) to[bend right=45] node[left]{eventos} (eval.west);
+\end{tikzpicture}
+\caption{Arquitetura do UXAgent.}
+\label{fig:arch}
+\end{figure}
+
+O ciclo é: (1) a interface expõe estado e ações; (2) o adaptador produz $o_t$; (3) máscara e buffer atualizam $x_t$; (4) o LLM propõe uma ação entre avançar, voltar, mostrar o original da página inteira (desligar a tradução) ou restaurá-la, alternar um balão entre original e tradução, abrir/fechar painel, responder ou desistir, restrita às ações da condição em curso; (5) o controlador rejeita propostas inválidas, aplica mecanismos e executa uma ação; (6) a interface e o avaliador registram resultado, pré/pós-estado e sucesso por gabarito externo. Todos os mecanismos podem ser desligados em estudo de ablação. Modelo, \emph{prompt hash}, temperatura, semente quando disponível, commit, navegador, provedor, OCR e configuração são registrados. Latência, rejeição do controlador e erro do artefato não são classificados como erro da persona.
+
+\section{Interface, cenários e tarefas}
+O objeto experimental utiliza uma versão fixada do sistema, tradução inglês--português e páginas licenciadas ou produzidas para o estudo. A condição A oferece apenas a página traduzida; a condição B acrescenta a restauração do original da página, a alternância por balão e o painel OCR/tradução. Como o clique por balão está sempre ativo na versão atual da interface, na condição A essa ação não é oferecida ao agente pelo controlador nem usada pelos autores. A animação inicial, que exibe o original antes da tradução sem ação do leitor, fica desligada em ambas as condições, pois mostraria o original também na condição A e confundiria a medida de uso de apoio; o realce dos balões fica no mesmo estado nas duas. Antes do ajuste dos mecanismos, quatro tarefas são definidas e mantidas sem alteração: C1 e C2 destinam-se ao ajuste técnico; V1 e V2 ficam reservadas para verificação posterior e não podem aparecer em \emph{prompts}, demonstrações ou ajuste de parâmetros.
+
+\begin{table*}[t]
+\caption{Tarefas congeladas, sucesso e cobertura da matriz.}
+\label{tab:tasks}
+\centering\scriptsize
+\begin{tabularx}{\textwidth}{p{0.7cm}Y Y Y p{1.5cm}}
+\toprule
+ID & Objetivo, entrada e pré-condição & Critério verificável & Estrutura e dificuldade & Linhas \\
+\midrule
+C1 & Ler página urbana de quatro quadros e identificar por que a personagem perdeu o ônibus; capítulo aberto e processamento concluído. & Seleciona a causa correta entre quatro opções. & Sequencial; um termo incomum; apoio opcional. & R1,R3,R4,R5 \\
+C2 & Ler diálogo de cinco balões e identificar a quem ``it'' se refere; mesma inicialização. & Seleciona referente correto e não há falha técnica. & Dependência entre balões; distrator lexical. & R2,R3,R4,R5 \\
+V1 & Ler página policial de seis quadros e inferir quem deixou a chave; conteúdo e composição inéditos. & Resposta correta segundo gabarito de dois anotadores. & Duas pistas não adjacentes; requer retorno de página. & R1,R2,R4,R5 \\
+V2 & Ler página cômica com idiomatismo e erro controlado de OCR, inserido por texto de OCR previamente fixado (recurso ainda não implementado); detectar qual fala não combina com a cena. & Marca o balão correto e escolhe ação de recuperação. & Diagnóstico, não mera compreensão; painel contém fonte e saída. & R1,R3,R4,R5 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+A análise hierárquica comum é: 0 compreender e responder; 1 verificar que a página está pronta; 2 ler quadros na ordem; 3 manter relações relevantes; 4, se necessário, 4.1 mostrar o original da página ou de um balão e/ou 4.2 abrir painel, 4.3 comparar e retornar; 5 responder; 6 encerrar. Plano: executar 1--3 em sequência, repetir 2--4 quando houver incoerência, então 5. Em CTT: \code{ready >> read* >> (inspect? || navigate?) >> answer}. Erros previstos são avanço prematuro, seleção de resposta antes de ler e interpretação lexical/referencial incorreta.
+
+No GOMS de referência, a condição A requer \{confirmar pronto, ler, responder\}: três operadores de alto nível. Na B, uma inspeção da página inteira ou pelo painel acrescenta \{abrir apoio, comparar, fechar\}: três operadores; a inspeção de um único balão acrescenta \{clicar no balão, comparar\}, dois operadores, e um novo clique devolve a tradução. O valor de referência $N_{GOMS}$ usa o caminho mais curto disponível na condição. V1 acrescenta voltar/avançar; V2 exige localizar balão e escolher recuperação. Contam-se ações de interface, não tokens internos do modelo. A dificuldade progride de causa local (C1) a referência (C2), integração não adjacente (V1) e diagnóstico de falha (V2). Assim, as tarefas reservadas diferem em conteúdo e estrutura, não apenas em nomes.
+
+\section{Protocolo de teste}
+Instrução literal: ``Leia a página e responda à pergunta. Você pode avançar, voltar, mostrar a página original e abrir o painel quando esses controles estiverem disponíveis. Se não conseguir concluir, escolha Desistir.'' O agente recebe a descrição dos controles e uma demonstração sem conteúdo experimental. Os autores usam a mesma instrução durante a inspeção do sistema, mas seus resultados não são tratados como dados do público-alvo.
+
+Cada sessão começa com cache experimental limpo, zoom 100\%, página inicial definida e a mesma configuração de tradução. Como os tradutores on-line sem chave variam entre execuções e sofrem limite de requisições (HTTP 429), usa-se o tradutor local OPUS-MT, com modelo e versão registrados; o texto traduzido de cada página é conferido pelos autores antes do congelamento e seu \emph{hash} é registrado em cada sessão, para detectar divergências. A interface ainda não permite carregar uma tradução revisada manualmente. As condições e tarefas são alternadas para que os autores verifiquem ambos os fluxos, sem pretensão de controle estatístico de efeitos de aprendizagem. C1--C2 precedem o congelamento dos parâmetros; V1--V2 são executadas somente depois desse congelamento. O sucesso depende do gabarito, nunca do relato do agente. O limite é de 40 ações executadas ou desistência explícita. Problemas técnicos permitem um reinício e recebem \code{technical\_failure}.
+
+\emph{Slip} é ação executada diferente da intenção observável, como fechar o painel imediatamente após abri-lo sem leitura intermediária; \emph{mistake} é plano ou resposta inadequada apesar de execução correta, como escolher referente errado. Propostas rejeitadas são \code{controller\_rejection}, não ações executadas. Os comparadores atuais são exclusivamente sintéticos e diferem apenas nos parâmetros ou na ativação dos mecanismos. As ações dos autores são registradas separadamente como \code{synthetic=false} e \code{tester\_role=author}, sem interpretação como comportamento típico de usuário.
+
+\section{Instrumentação e dicionário de métricas}
+O vocabulário fechado é: \code{session\_start}, \code{page\_ready}, \code{page\_next}, \code{page\_previous}, \code{translation\_toggle}, \code{original\_shown}, \code{balloon\_toggle}, \code{panel\_opened}, \code{panel\_closed}, \code{answer\_submitted}, \code{quit}, \code{technical\_failure}, \code{controller\_rejection}, \code{token\_masked} e \code{context\_evicted}. \code{translation\_toggle} e \code{original\_shown} referem-se à página inteira; \code{balloon\_toggle} registra o identificador do balão e o estado resultante. Cada registro JSONL contém: \code{event\_id}, tempo monotônico, \code{session\_id}, \code{actor\_id} pseudônimo, \code{persona\_id}, \code{synthetic}, iniciador (\code{user} ou \code{system}), tarefa, condição, ordem, versões do sistema/modelo/prompt/configuração, \emph{hash} da tradução, ação proposta, ação executada, resultado, estado pré/pós, apoio ativo, categoria de erro e latências. Exibições do original feitas pela própria interface, como a animação inicial, são marcadas como \code{system}.
+
+\begin{table*}[t]
+\caption{Dicionário mínimo de métricas.}
+\label{tab:metrics}
+\centering\scriptsize
+\begin{tabularx}{\textwidth}{p{2cm}Y Y Y Y}
+\toprule
+Métrica & Fórmula, unidade e domínio & Denominador/nível & Agregação & Registro incompleto \\
+\midrule
+Sucesso $S$ & $N_{corretas}/N_{iniciadas}$; proporção $[0,1]$ & Tarefa iniciada; tarefa/sessão & Média e IC por tarefa e condição & Iniciada sem resposta conta 0; falha técnica é excluída e informada. \\
+Taxa de erro $E$ & $(N_{slip}+N_{mistake})/N_{oportunidades}$ & Oportunidades pré-enumeradas por tarefa & Separar tipo, tarefa e condição & Sem denominador válido: ausente, nunca zero. \\
+Ações excedentes $A_x$ & $N_{executadas}-N_{GOMS}$; ações inteiras & Tarefa; rejeições não contam & Mediana, IQR e distribuição de sequências & Sequência truncada marcada; não imputar. \\
+Uso de apoio $U$ & tarefas com original (página ou balão) ou painel acionados pelo leitor, divididas por tarefas iniciadas & Tarefa/sessão, $[0,1]$; eventos \code{system} não contam & Proporção por tipo de apoio e condição & Evento aberto sem fechamento ainda conta uso. \\
+Latência & $t_{fim}-t_{início}$ separada em computação e tempo comportamental simulado & Evento/tarefa; ms & Reportar componentes, sem somá-los como tempo humano & Relógio inválido elimina apenas a métrica temporal. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+As três métricas prioritárias são $S$, $U$ e $A_x$. Resultados são reportados por tarefa e condição, antes de qualquer total. Nesta etapa, elas descrevem somente execuções sintéticas e inspeções técnicas dos autores. ``Olhou'', ``leu'' e ``focou'' não são inferidos da abertura do painel; sem rastreamento ocular, esses eventos indicam somente disponibilidade visível. Confiança e carga percebida exigiriam participantes independentes em um estudo futuro e não podem ser autoatribuídas pelo agente nem inferidas dos testes dos autores.
+
+\section{Verificação atual e validação futura}
+\subsection{Fonte dos testes atuais}
+Não está previsto, nesta etapa, o recrutamento de adultos externos. A execução manual será feita pelos dois autores, que conhecem o sistema e participam de seu desenvolvimento. Por essa razão, seus registros servem apenas para encontrar defeitos, conferir estados, revisar instruções e verificar se os eventos e denominadores podem ser calculados. Eles não constituem amostra, grupo de controle, estudo de usabilidade ou fonte de calibração da persona. A fundamentação do perfil permanece bibliográfica, e todos os parâmetros continuam marcados como hipóteses operacionais.
+
+Caso uma validação empírica seja realizada em trabalho futuro, ela deverá usar participantes independentes, instrumento de leitura em inglês, aprovação ética e planejamento amostral próprio. A Tabela~\ref{tab:compat} registra as condições mínimas de compatibilidade, mas não descreve uma coleta já assumida ou contratada.
+
+\begin{table}[t]
+\caption{Compatibilidade exigida em uma eventual validação humana.}
+\label{tab:compat}
+\centering\scriptsize
+\begin{tabularx}{\columnwidth}{p{1.3cm}YY}
+\toprule
+Aspecto & Humano & Agente \\
+\midrule
+Perfil & Estrato por teste independente & Parâmetros $c,k,u,v$ \\
+Tarefa & C1--C2 ou V1--V2 & Mesmo ID e gabarito \\
+Interface & Build/condição fixos & Mesma build/condição \\
+Apoio & Original (página e balão) e painel & Mesmas ações \\
+Métricas & $S,U,A_x$ pelos eventos & Mesmas fórmulas/eventos \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Procedimento executável nesta etapa}
+Os autores percorrem C1--C2 para verificar controles, gabaritos, categorias de erro e integridade dos registros. Esses testes podem corrigir defeitos do protocolo, mas não ajustar os parâmetros para reproduzir o comportamento dos autores. Após o congelamento da configuração, V1--V2 permanecem inéditas para o agente e são usadas para verificar se o fluxo funciona em conteúdo e estrutura diferentes. Executam-se repetições sintéticas por combinação de persona, tarefa e condição, com temperatura inicial 0,2, análise de sensibilidade em 0 e 0,7, modelos alternativos e ablação dos mecanismos. Os resultados admissíveis nesta fase são execução correta, falha técnica, diferença entre configurações sintéticas ou resultado inconclusivo; nunca ``comportamento humano reproduzido''.
+
+Sem dados independentes, $c,k,u,v$ não serão calibrados empiricamente. A configuração inicial será mantida como cenário de teste definido a partir da literatura, e C1--C2 serão chamadas de tarefas de ajuste técnico, não de calibração humana. V1--V2 preservam a separação exigida entre ajuste e verificação, mas também não validam a persona.
+
+\subsection{Critério condicional de validação}
+Somente se houver uma coleta humana futura, para $m\in\{S,U,A_x\}$ serão calculados
+\begin{equation}
+\Delta H_m=\mu^{H}_{m,P}-\mu^{H}_{m,C},\quad
+\Delta S_m=\mu^{S}_{m,P}-\mu^{S}_{m,C},\quad
+e_m=\Delta S_m-\Delta H_m.
+\end{equation}
+Nesse cenário futuro, ICs de 95\% seriam obtidos por \emph{bootstrap} estratificado por participante para humanos e por execução para agentes. Tolerâncias seriam definidas antes de observar os dados. Haveria alinhamento quando $\Delta H_m$ e $\Delta S_m$ apresentassem o mesmo sinal e o IC de $e_m$ permanecesse inteiramente dentro de $[-\epsilon_m,+\epsilon_m]$; sinais opostos ou intervalo totalmente externo indicariam não alinhamento; os demais casos seriam inconclusivos. Como a coleta não integra o escopo atual, nenhuma tolerância numérica é fixada e o agente será reportado como \emph{proxy exploratório não validado}.
+
+Os controles atuais incluem agente de referência, política sem mecanismos, versão fixa do artefato, estímulos revisados e sementes registradas. As análises variam cobertura, memória, limiar, política compensatória, modelo e temperatura. Resultados dos autores são apresentados separadamente, de forma descritiva, e não entram nas equações de discrepância humana.
+
+\section{Ética, privacidade e limites de uso}
+O perfil não é diagnóstico nem representa população vulnerável por definição. Não haverá recrutamento público nesta etapa: somente os autores testarão o programa e seus registros serão identificados pelo papel de testador, não como dados do público-alvo. Qualquer coleta futura com outras pessoas dependeria de aprovação ética institucional, consentimento informado e possibilidade de retirada. Nesta etapa usam-se dados publicados, páginas sintéticas ou licenciadas e identificadores fictícios; capítulos comerciais usados apenas na depuração técnica do leitor não compõem as tarefas C1--V2. Não serão enviados nomes, desempenho individual, chaves de API, imagens não licenciadas ou dados sensíveis a serviços externos de LLM. O OCR roda localmente e nenhuma imagem sai do navegador; os tradutores opcionais Google, MyMemory e Gemini recebem o texto das falas, por isso as sessões usam o OPUS-MT local. Quando serviço externo for necessário, o estado será minimizado e o provedor/retenção serão declarados; execução local será preferida quando viável.
+
+A revisão de estereótipos será repetida pelos dois autores: linguagem respeitosa, competência e estratégia compensatória presentes, ausência de inferências sobre inteligência/escolaridade e nenhum atributo não sustentado. O risco principal de mau uso é apresentar saídas sintéticas ou ações dos desenvolvedores como evidência sobre brasileiros com baixa proficiência; por isso, tabelas e logs distinguem \code{synthetic=true} de \code{tester\_role=author}. Se houver participação pública futura, remuneração e ausência de relação de subordinação deverão ser consideradas no protocolo ético.
+
+Usos permitidos são depurar protocolo, verificar eventos e fórmulas, testar critérios de interrupção e explorar cenários antes do estudo. São proibidos estimar desempenho real fora das condições validadas, medir satisfação ou esforço subjetivo, substituir pessoas, diagnosticar proficiência, ranquear indivíduos e generalizar para todos os leitores brasileiros. Mesmo após validação, validade permanece restrita a build, tarefas, idioma, perfil, mecanismos e intervalos testados.
+
+\section{Conclusão}
+A especificação transforma o tema anterior em um instrumento verificável: um agente-proxy com mecanismos externos, rastreáveis e reversíveis para testar a avaliação do leitor já implementado. O resultado imediato esperado não é demonstrar benefício da interface, mas verificar se o protocolo distingue resposta correta, consulta a apoio, ações excedentes e falha técnica. A próxima etapa consiste em implementar controlador e instrumentação, incluindo o registro de \code{balloon\_toggle} e do iniciador de cada exibição do original, a injeção de texto de OCR fixado exigida por V2, e executar testes sintéticos e inspeções pelos autores. Como não se prevê amostra externa, o trabalho será concluído como verificação técnica e exploração de cenários; somente uma pesquisa futura com dados humanos independentes poderia calibrar ou validar o proxy.
+
+\begin{thebibliography}{00}
+\bibitem{forkrepo} H. F. Araújo e J. O. Silva, ``Suwayomi Leitor: tradução de quadrinhos,'' GitHub, commit \code{d25caa5}, 2026. [Online]. Disponível em: \url{https://github.com/Ak4ai/suwayomi-leitor}. Acesso em: 26 out. 2026.
+\bibitem{hinami2021} R. Hinami, S. Ishiwatari, K. Yasuda e Y. Matsui, ``Towards fully automated manga translation,'' em \emph{Proc. AAAI}, vol. 35, no. 14, pp. 12998--13008, 2021.
+\bibitem{kaino2024} M. Kaino, R. B. A. Pratama e N. Aizawa, ``Scene-aware contextualized manga translation,'' em \emph{Proc. LREC-COLING}, pp. 14482--14492, 2024.
+\bibitem{sachdeva2024} R. Sachdeva e A. Zisserman, ``The manga whisperer: Automatically generating transcriptions for comics,'' em \emph{Proc. IEEE/CVF CVPR}, pp. 12967--12976, 2024.
+\bibitem{webb2025} S. Webb, A. Pellicer-Sánchez e A. Wang, ``Lexical coverage and reading comprehension revisited,'' \emph{Reading in a Foreign Language}, vol. 37, no. 1, pp. 1--21, 2025, doi: 10.64152/10125/67517.
+\bibitem{chung2023} E. S. Chung, ``L2 learners' use of raw machine-translated output in reading comprehension,'' \emph{Computer-Assisted Language Learning Electronic Journal}, vol. 24, no. 3, pp. 1--19, 2023.
+\bibitem{medhi2007} I. Medhi, A. Sagar e K. Toyama, ``Text-free user interfaces for illiterate and semiliterate users,'' \emph{Information Technologies \& International Development}, vol. 4, no. 1, pp. 37--50, 2007.
+\end{thebibliography}
+
+\end{document}
