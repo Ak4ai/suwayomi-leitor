@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+data/web_sessions/
+data/iteracoes_anteriores/

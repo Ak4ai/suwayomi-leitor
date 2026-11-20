@@ -1,0 +1,5 @@
+{
+  "_aviso": "Arquivo do analista. Lido apenas por verifier.py. Nunca entra no prompt nem na observação.",
+  "C1": {"correct": "b", "min_actions": 3},
+  "C2": {"correct": "d", "min_actions": 4}
+}
